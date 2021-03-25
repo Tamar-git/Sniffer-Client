@@ -53,6 +53,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AesCrypto.cs" />
     <Compile Include="Captcha.cs" />
     <Compile Include="LoginForm.cs">
       <SubType>Form</SubType>
