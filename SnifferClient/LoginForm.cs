@@ -244,7 +244,7 @@ namespace SnifferClient
         }
 
         /// <summary>
-        /// when sign in button is clicked sends a request to the server to check if the details that were inserted are valid
+        /// When sign in button is clicked sends a request to the server to check if the details that were inserted are valid
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
