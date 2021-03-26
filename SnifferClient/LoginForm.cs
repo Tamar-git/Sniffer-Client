@@ -176,18 +176,19 @@ namespace SnifferClient
                     // creates an Aes instance for symmetric encryption and sends the key to the server
                     aes = new AesCrypto();
                     byte[] bytesArray = AesKeyAndIVBytesToSend(aes.GetKey(), aes.GetIV());
-                    SendMessage(bytesArray);
+                    //SendMessage(bytesArray);
+                    SendRsaEncryptedMessage(bytesArray);
 
-                    //string key = ByteConverter.GetString(aes.GetKey());
-                    //string iv = ByteConverter.GetString(aes.GetIV());
-                    //string aesDetails = key + "/" + iv;
-                    //Debug.WriteLine("Key: " + BytesToString(aes.GetKey()) + "\nIV: " + BytesToString(aes.GetIV()));
-                    //string toSend = AesKeyTransfer + "#" + aesDetails + "#" + aesDetails.Length;
-                    //Debug.WriteLine("to send: " + toSend);
-                    ////SendRsaEncryptedMessage(toSend);
-                    //byte[] bytesToSend = ByteConverter.GetBytes(toSend);
-                    //Debug.WriteLine("bytes to send: " + BytesToString(bytesToSend));
-                    //SendMessage(bytesToSend);
+                    /*string key = ByteConverter.GetString(aes.GetKey());
+                    string iv = ByteConverter.GetString(aes.GetIV());
+                    string aesDetails = key + "/" + iv;
+                    Debug.WriteLine("Key: " + BytesToString(aes.GetKey()) + "\nIV: " + BytesToString(aes.GetIV()));
+                    string toSend = AesKeyTransfer + "#" + aesDetails + "#" + aesDetails.Length;
+                    Debug.WriteLine("to send: " + toSend);
+                    //SendRsaEncryptedMessage(toSend);
+                    byte[] bytesToSend = ByteConverter.GetBytes(toSend);
+                    Debug.WriteLine("bytes to send: " + BytesToString(bytesToSend));
+                    SendMessage(bytesToSend);*/
                 }
                 else
                 {
