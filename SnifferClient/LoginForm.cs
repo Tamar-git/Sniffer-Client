@@ -140,8 +140,8 @@ namespace SnifferClient
         private void SendAesEncryptedMessage(string message)
         {
             Debug.WriteLine("sending aes: " + message);
-            //byte[] toSend = aes.EncryptStringToBytes(message, aes.GetKey(), aes.GetIV());
-            byte[] toSend = System.Text.Encoding.ASCII.GetBytes(message);
+            byte[] toSend = aes.EncryptStringToBytes(message, aes.GetKey(), aes.GetIV());
+            //byte[] toSend = System.Text.Encoding.ASCII.GetBytes(message);
             SendMessage(toSend);
         }
 
