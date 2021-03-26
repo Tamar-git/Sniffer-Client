@@ -37,7 +37,6 @@
             this.SourceAdd = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.DestinationAdd = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.Checksum = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.labelChosenPacketData = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             ArrivalTime = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -105,14 +104,6 @@
             // 
             this.Checksum.Text = "Checksum";
             this.Checksum.Width = 74;
-            // 
-            // labelChosenPacketData
-            // 
-            this.labelChosenPacketData.AutoSize = true;
-            this.labelChosenPacketData.Location = new System.Drawing.Point(288, 12);
-            this.labelChosenPacketData.Name = "labelChosenPacketData";
-            this.labelChosenPacketData.Size = new System.Drawing.Size(0, 13);
-            this.labelChosenPacketData.TabIndex = 7;
             // 
             // pictureBox1
             // 

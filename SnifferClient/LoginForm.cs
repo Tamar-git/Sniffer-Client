@@ -416,6 +416,7 @@ namespace SnifferClient
             // opens a new menu form that gets the tcp client
             RawSockSnifferForm sniffer = new RawSockSnifferForm(client);
             this.Invoke(new Action(() => sniffer.ShowDialog()));
+            this.Invoke(new Action(() => this.Close()));
             return;
         }
 

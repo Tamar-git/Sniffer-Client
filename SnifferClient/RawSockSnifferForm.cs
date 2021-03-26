@@ -125,18 +125,27 @@ namespace SnifferClient
         {
             try
             {
-                counter++;
-                //Thread.Sleep(1000);
                 RawCapture p = captureEventArgs.Packet;
-                List<String> dataArray = pA.GetInfoList(p);
-                dataArray[0] = counter.ToString();
-                ListViewItem item = new ListViewItem(dataArray.ToArray());
-                item.Tag = dataArray[dataArray.Count - 1];
+                byte[] dataToTag = null;
+                List<String> dataList = pA.GetInfoList(p, out dataToTag);
+                if (dataList[1].Equals("TCP")) //sniffer supports only TCP messages for now
+                {
+                    counter++;
+                    dataList[0] = counter.ToString();
+                    
+                    ListViewItem item = new ListViewItem(dataList.ToArray());
+                    item.Tag = dataToTag;
+                    //item.Tag = dataList[dataList.Count - 1];
 
-                this.Invoke(new Action(() => listView1.Items.Add(item)));
+                    this.Invoke(new Action(() => listView1.Items.Add(item)));
 
-                string allData = String.Join(", ", dataArray.ToArray());
-                SendMessage(allData);
+                    string allData = String.Join(", ", dataList.ToArray());
+                    SendMessage(allData);
+                }
+
+                //Thread.Sleep(1000);
+
+                
             }
             catch (Exception e)
             {
@@ -183,7 +192,7 @@ namespace SnifferClient
                 return;
                 // will throw null pointer exception
             }
-          
+
             // Create listener
             device.OnPacketArrival += new PacketArrivalEventHandler(device_OnPacketArrival);
 
@@ -501,12 +510,17 @@ namespace SnifferClient
 
         private void listView1_ItemMouseHover(object sender, ListViewItemMouseHoverEventArgs e)
         {
-            this.Invoke(new Action(() => labelChosenPacketData.Text = "data: " + e.Item.Tag));
+            //this.Invoke(new Action(() => labelChosenPacketData.Text = "data: " + e.Item.Tag));
         }
 
         private void listView1_Click(object sender, EventArgs e)
         {
-            this.Invoke(new Action(() => labelChosenPacketData.Text = "data: " + listView1.SelectedItems[0].Tag));
+            //this.Invoke(new Action(() => labelChosenPacketData.Text = "data: " + listView1.SelectedItems[0].Tag));
+            // Create a new instance of the DataViewForm class
+            DataViewForm dataViewForm = new DataViewForm(listView1.SelectedItems[0]);
+
+            // Show the form
+            this.Invoke(new Action(() => dataViewForm.Show()));
         }
 
         private void RawSockSnifferForm_FormClosed(object sender, FormClosedEventArgs e)

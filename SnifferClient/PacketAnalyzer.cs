@@ -19,7 +19,7 @@ namespace SnifferClient
         /// </summary>
         /// <param name="raw">packet</param>
         /// <returns>list of strings with the details of the packet</returns>
-        public List<String> GetInfoList(RawCapture raw)
+        public List<String> GetInfoList(RawCapture raw, out byte[] dataToTag)
         {
             List<String> info = new List<string>();
 
@@ -32,26 +32,26 @@ namespace SnifferClient
                 DateTime time = raw.Timeval.Date;
                 info.Add(String.Format("{0}:{1}:{2}:{3}", time.Hour, time.Minute, time.Second, time.Millisecond));
                 info.Add(raw.Data.Length.ToString());
-                
-                Packet packet = PacketDotNet.Packet.ParsePacket(ethType, raw.Data);
 
+                Packet packet = PacketDotNet.Packet.ParsePacket(ethType, raw.Data);
+                dataToTag = null;
                 if (protocol.Equals("TCP"))
                 {
                     var tcpPacket = (TcpPacket)packet.Extract(typeof(TcpPacket));
                     var ipPacket = (IpPacket)packet.Extract(typeof(IpPacket));
-                    
+
                     var tcp = (TcpPacket)packet.Extract(typeof(TcpPacket));
                     string srcIp = ipPacket.SourceAddress.ToString();
                     string dstIp = ipPacket.DestinationAddress.ToString();
-                    
+
                     info.Add(srcIp + " " + tcpPacket.SourcePort.ToString());
                     info.Add(dstIp + " " + tcpPacket.DestinationPort.ToString());
                     info.Add(tcpPacket.Checksum.ToString());
 
-                    byte[] bytes = tcpPacket.PayloadData;
-                    
+                    dataToTag = tcpPacket.PayloadData;
+
                     UnicodeEncoding _encoder = new UnicodeEncoding();
-                    string data = System.Text.Encoding.ASCII.GetString(bytes, 0, bytes.Length);
+                    string data = System.Text.Encoding.ASCII.GetString(dataToTag, 0, dataToTag.Length);
                     info.Add(data);
                 }
                 return info;
@@ -59,6 +59,7 @@ namespace SnifferClient
             catch (Exception e)
             {
                 System.Windows.Forms.MessageBox.Show(e.ToString());
+                dataToTag = null;
                 return info;
             }
         }
