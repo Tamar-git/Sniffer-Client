@@ -122,7 +122,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1006, 536);
             this.Controls.Add(this.pictureBox1);
-            this.Controls.Add(this.labelChosenPacketData);
             this.Controls.Add(this.listView1);
             this.Controls.Add(this.StartButton);
             this.Name = "RawSockSnifferForm";

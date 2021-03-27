@@ -111,5 +111,7 @@ namespace SnifferClient
         {
             this.Invoke(new Action(() => this.Close()));
         }
+
+
     }
 }

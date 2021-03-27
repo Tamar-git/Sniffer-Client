@@ -47,7 +47,7 @@
             // 
             // closeButton
             // 
-            this.closeButton.Location = new System.Drawing.Point(496, 384);
+            this.closeButton.Location = new System.Drawing.Point(1253, 715);
             this.closeButton.Name = "closeButton";
             this.closeButton.Size = new System.Drawing.Size(75, 23);
             this.closeButton.TabIndex = 1;
@@ -59,15 +59,15 @@
             // 
             this.hexLabel.Location = new System.Drawing.Point(41, 101);
             this.hexLabel.Name = "hexLabel";
-            this.hexLabel.Size = new System.Drawing.Size(230, 280);
+            this.hexLabel.Size = new System.Drawing.Size(625, 610);
             this.hexLabel.TabIndex = 2;
             this.hexLabel.Text = "label1";
             // 
             // asciiLabel
             // 
-            this.asciiLabel.Location = new System.Drawing.Point(326, 101);
+            this.asciiLabel.Location = new System.Drawing.Point(692, 101);
             this.asciiLabel.Name = "asciiLabel";
-            this.asciiLabel.Size = new System.Drawing.Size(230, 280);
+            this.asciiLabel.Size = new System.Drawing.Size(625, 610);
             this.asciiLabel.TabIndex = 3;
             this.asciiLabel.Text = "label1";
             // 
@@ -83,7 +83,7 @@
             // asciiIntroLabel
             // 
             this.asciiIntroLabel.AutoSize = true;
-            this.asciiIntroLabel.Location = new System.Drawing.Point(326, 71);
+            this.asciiIntroLabel.Location = new System.Drawing.Point(692, 71);
             this.asciiIntroLabel.Name = "asciiIntroLabel";
             this.asciiIntroLabel.Size = new System.Drawing.Size(76, 13);
             this.asciiIntroLabel.TabIndex = 5;
@@ -93,7 +93,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(580, 415);
+            this.ClientSize = new System.Drawing.Size(1340, 750);
             this.Controls.Add(this.asciiIntroLabel);
             this.Controls.Add(this.hexIntroLabel);
             this.Controls.Add(this.asciiLabel);

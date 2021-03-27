@@ -32,6 +32,9 @@ namespace SnifferClient
         int counter = 0;
         TcpClient client;
 
+        // requests' kinds
+        const int packetDetailsResponse = 1;
+
         /// <summary>
         /// constructor that initializes the sniffer form
         /// </summary>
@@ -128,24 +131,24 @@ namespace SnifferClient
                 RawCapture p = captureEventArgs.Packet;
                 byte[] dataToTag = null;
                 List<String> dataList = pA.GetInfoList(p, out dataToTag);
-                if (dataList[1].Equals("TCP")) //sniffer supports only TCP messages for now
+                //if (dataList[1].Equals("TCP")) //sniffer supports only TCP messages for now
+                if (dataList.Count > 4) //sniffer supports only TCP Ethernet messages for now
                 {
                     counter++;
                     dataList[0] = counter.ToString();
-                    
+
                     ListViewItem item = new ListViewItem(dataList.ToArray());
                     item.Tag = dataToTag;
                     //item.Tag = dataList[dataList.Count - 1];
 
                     this.Invoke(new Action(() => listView1.Items.Add(item)));
+                    SendPacketDataToServer(dataList, dataToTag);
 
-                    string allData = String.Join(", ", dataList.ToArray());
-                    SendMessage(allData);
                 }
 
                 //Thread.Sleep(1000);
 
-                
+
             }
             catch (Exception e)
             {
@@ -232,6 +235,30 @@ namespace SnifferClient
             }
         }
 
+        public void SendPacketDataToServer(List<string> dataList, byte[] dataToTag)
+        {
+            //string allData = String.Join(",", dataList.ToArray(), 0, dataList.Count - 1);
+            string allData = "";
+            for (int i = 1; i < dataList.Count - 1; i++)
+            {
+                allData += dataList[i].ToString() + ","; 
+            }
+
+            if (dataToTag.Length > 0)
+            {
+                string s = "";
+
+                foreach (byte b in dataToTag)
+                {
+                    s += b.ToString("X") + " ";
+                }
+                allData += s;
+            }
+
+            string messageToSend = packetDetailsResponse + "#" + allData + "#" + allData.Length;
+            SendMessage(messageToSend);
+
+        }
         /// <summary>
         /// checks the packet's protocol
         /// </summary>

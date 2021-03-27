@@ -22,44 +22,47 @@ namespace SnifferClient
         public List<String> GetInfoList(RawCapture raw, out byte[] dataToTag)
         {
             List<String> info = new List<string>();
-
+            dataToTag = null;
             try
             {
                 LinkLayers ethType = raw.LinkLayerType;
-                string protocol = GetPacketProtocol(raw);
-                info.Add("0");
-                info.Add(protocol);
-                DateTime time = raw.Timeval.Date;
-                info.Add(String.Format("{0}:{1}:{2}:{3}", time.Hour, time.Minute, time.Second, time.Millisecond));
-                info.Add(raw.Data.Length.ToString());
-
-                Packet packet = PacketDotNet.Packet.ParsePacket(ethType, raw.Data);
-                dataToTag = null;
-                if (protocol.Equals("TCP"))
+                if (ethType is LinkLayers.Ethernet)
                 {
-                    var tcpPacket = (TcpPacket)packet.Extract(typeof(TcpPacket));
-                    var ipPacket = (IpPacket)packet.Extract(typeof(IpPacket));
+                    string protocol = GetPacketProtocol(raw);
+                    info.Add("0");
+                    info.Add(protocol);
+                    DateTime time = raw.Timeval.Date.ToLocalTime();
+                    info.Add(String.Format("{0}:{1}:{2}:{3}", time.Hour, time.Minute, time.Second, time.Millisecond));
+                    info.Add(raw.Data.Length.ToString());
 
-                    var tcp = (TcpPacket)packet.Extract(typeof(TcpPacket));
-                    string srcIp = ipPacket.SourceAddress.ToString();
-                    string dstIp = ipPacket.DestinationAddress.ToString();
+                    Packet packet = PacketDotNet.Packet.ParsePacket(ethType, raw.Data);
+                    
+                    if (protocol.Equals("TCP"))
+                    {
+                        var tcpPacket = (TcpPacket)packet.Extract(typeof(TcpPacket));
+                        var ipPacket = (IpPacket)packet.Extract(typeof(IpPacket));
 
-                    info.Add(srcIp + " " + tcpPacket.SourcePort.ToString());
-                    info.Add(dstIp + " " + tcpPacket.DestinationPort.ToString());
-                    info.Add(tcpPacket.Checksum.ToString());
+                        var tcp = (TcpPacket)packet.Extract(typeof(TcpPacket));
+                        string srcIp = ipPacket.SourceAddress.ToString();
+                        string dstIp = ipPacket.DestinationAddress.ToString();
 
-                    dataToTag = tcpPacket.PayloadData;
+                        info.Add(srcIp + " " + tcpPacket.SourcePort.ToString());
+                        info.Add(dstIp + " " + tcpPacket.DestinationPort.ToString());
+                        info.Add(tcpPacket.Checksum.ToString());
 
-                    UnicodeEncoding _encoder = new UnicodeEncoding();
-                    string data = System.Text.Encoding.ASCII.GetString(dataToTag, 0, dataToTag.Length);
-                    info.Add(data);
+                        dataToTag = tcpPacket.PayloadData;
+
+                        UnicodeEncoding _encoder = new UnicodeEncoding();
+                        string data = System.Text.Encoding.ASCII.GetString(dataToTag, 0, dataToTag.Length);
+                        info.Add(data);
+                    }
+                    
                 }
                 return info;
             }
             catch (Exception e)
             {
                 System.Windows.Forms.MessageBox.Show(e.ToString());
-                dataToTag = null;
                 return info;
             }
         }
