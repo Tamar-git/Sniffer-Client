@@ -17,6 +17,7 @@ using System.Drawing.Drawing2D;
 using System.Xml;
 using System.Threading;
 using System.Runtime.CompilerServices;
+using System.Diagnostics;
 
 namespace SnifferClient
 {
@@ -34,6 +35,10 @@ namespace SnifferClient
 
         // requests' kinds
         const int packetDetailsResponse = 1;
+        const int logRequest = 2;
+        const int logResponse = 3;
+        // used for sending and reciving data
+        private byte[] data;
 
         /// <summary>
         /// constructor that initializes the sniffer form
@@ -43,8 +48,114 @@ namespace SnifferClient
             InitializeComponent();
             pA = new PacketAnalyzer();
             this.client = client;
+
+            // Read data from the client async
+            data = new byte[client.ReceiveBufferSize];
+
+            // BeginRead will begin async read from the NetworkStream
+            // This allows the server to remain responsive and continue accepting new connections from other clients
+            // When reading complete control will be transfered to the ReviveMessage() function.
+            client.GetStream().BeginRead(data,
+                                          0,
+                                          System.Convert.ToInt32(client.ReceiveBufferSize),
+                                          ReceiveMessage,
+                                          null);
         }
 
+        /// <summary>
+        /// actions that happens after the form's handle is created
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnHandleCreated(EventArgs e)
+        {
+            base.OnHandleCreated(e);
+            this.Invoke(new Action(() => previousSniffComboBox.Items.AddRange(GetLastWeekDates())));
+
+        }
+
+        /// <summary>
+        /// recursive method that recieves a message from the server and handles it according to the request or response number
+        /// </summary>
+        /// <param name="ar"></param>
+        public void ReceiveMessage(IAsyncResult ar)
+        {
+            int bytesRead;
+
+            try
+            {
+                lock (client.GetStream())
+                {
+                    // call EndRead to handle the end of an async read.
+                    bytesRead = client.GetStream().EndRead(ar);
+                }
+
+                string messageReceived = System.Text.Encoding.ASCII.GetString(data, 0, bytesRead);
+                string[] arrayReceived = messageReceived.Split('#');
+                int requestNumber = Convert.ToInt32(arrayReceived[0]);
+                string details = arrayReceived[1];
+                if (requestNumber == logResponse)
+                {
+                    ReccivingLog(details);
+                }
+                lock (client.GetStream())
+                {
+                    // continue reading from the client
+                    client.GetStream().BeginRead(data, 0, System.Convert.ToInt32(client.ReceiveBufferSize), ReceiveMessage, null);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("catch recieve");
+            }
+        }
+
+        public void ReccivingLog(string details)
+        {
+            string fileSize = details.Split('/')[0];
+            string fileName = details.Split('/')[1];
+            int length = Convert.ToInt32(fileSize);
+            byte[] buffer = new byte[length];
+            int received = 0;
+            int read = 0;
+            int size = 1024;
+            int remaining = 0;
+
+            // Read bytes from the server using the length sent from the server
+            while (received < length)
+            {
+                remaining = length - received;
+                if (remaining < size)
+                {
+                    size = remaining;
+                }
+
+                read = client.GetStream().Read(buffer, received, size);
+                received += read;
+            }
+            string messageReceived = System.Text.Encoding.ASCII.GetString(buffer, 0, received);
+            List<string> listOfPacketsData = messageReceived.Split('\n').ToList();
+            List<List<string>> listOfPacketsDataInArray = new List<List<string>>();
+            for(int i = 1; i <= listOfPacketsData.Count; i++)
+            {
+                listOfPacketsData[0] = i + listOfPacketsData[0];
+                // needs to present every packet as a line in the form's list view
+            }
+
+
+            Debug.WriteLine(messageReceived);
+            // Save the file using the filename sent by the client    
+            //using (FileStream fStream = new FileStream(Path.GetFileName(cmdFileName), FileMode.Create))
+            //{
+            //    fStream.Write(buffer, 0, buffer.Length);
+            //    fStream.Flush();
+            //    fStream.Close();
+            //}
+        }
+
+        public void AddLineToListView(List<String> detailsToAdd, int count)
+        {
+
+        }
         /// <summary>
         /// finds the devices that are available in the network
         /// </summary>
@@ -70,8 +181,6 @@ namespace SnifferClient
                 }
 
                 s += "\nThe following devices are available on this machine:\n----------------------------------------------------\n";
-                //Console.WriteLine("\nThe following devices are available on this machine:");
-                //Console.WriteLine("----------------------------------------------------\n");
 
                 // Print out the available network devices
                 foreach (ICaptureDevice dev in devices)
@@ -145,9 +254,6 @@ namespace SnifferClient
                     SendPacketDataToServer(dataList, dataToTag);
 
                 }
-
-                //Thread.Sleep(1000);
-
 
             }
             catch (Exception e)
@@ -241,7 +347,7 @@ namespace SnifferClient
             string allData = "";
             for (int i = 1; i < dataList.Count - 1; i++)
             {
-                allData += dataList[i].ToString() + ","; 
+                allData += dataList[i].ToString() + ",";
             }
 
             if (dataToTag.Length > 0)
@@ -559,6 +665,27 @@ namespace SnifferClient
         private void pictureBox1_Click(object sender, EventArgs e)
         {
             device.OnPacketArrival -= new PacketArrivalEventHandler(device_OnPacketArrival);
+        }
+
+        public static string[] GetLastWeekDates()
+        {
+            List<string> days = new List<string>();
+            DateTime currentDate = DateTime.Now.ToLocalTime().Date;
+            for (int i = 0; i < 7; i++)
+            {
+                days.Add(currentDate.ToString("dd/MM/yyyy"));
+                currentDate = currentDate.Subtract(new TimeSpan(1, 0, 0, 0));
+            }
+            return days.ToArray();
+        }
+
+        private void previousSniffComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string selectedDate = previousSniffComboBox.SelectedItem.ToString();
+            //dd/MM/yyyy --> yyyyMMdd
+            string wantedDate = selectedDate.Substring(6) + selectedDate.Substring(3, 2) + selectedDate.Substring(0, 2);
+            string messageToSend = logRequest + "#" + wantedDate + "#" + wantedDate.Length;
+            SendMessage(messageToSend);
         }
     }
 }

@@ -38,6 +38,8 @@
             this.DestinationAdd = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.Checksum = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.previousSniffComboBox = new System.Windows.Forms.ComboBox();
+            this.label1 = new System.Windows.Forms.Label();
             ArrivalTime = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
@@ -116,11 +118,31 @@
             this.pictureBox1.TabStop = false;
             this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
             // 
+            // previousSniffComboBox
+            // 
+            this.previousSniffComboBox.FormattingEnabled = true;
+            this.previousSniffComboBox.Location = new System.Drawing.Point(852, 14);
+            this.previousSniffComboBox.Name = "previousSniffComboBox";
+            this.previousSniffComboBox.Size = new System.Drawing.Size(121, 21);
+            this.previousSniffComboBox.TabIndex = 9;
+            this.previousSniffComboBox.SelectedIndexChanged += new System.EventHandler(this.previousSniffComboBox_SelectedIndexChanged);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(687, 17);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(159, 13);
+            this.label1.TabIndex = 10;
+            this.label1.Text = "Load previously sniffed packets:";
+            // 
             // RawSockSnifferForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1006, 536);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.previousSniffComboBox);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.listView1);
             this.Controls.Add(this.StartButton);
@@ -144,5 +166,7 @@
         private System.Windows.Forms.ColumnHeader DestinationAdd;
         private System.Windows.Forms.ColumnHeader Checksum;
         private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.ComboBox previousSniffComboBox;
+        private System.Windows.Forms.Label label1;
     }
 }
