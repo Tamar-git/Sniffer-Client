@@ -291,7 +291,7 @@ namespace SnifferClient
                 byte[] dataToTag = null;
                 List<String> dataList = pA.GetInfoList(p, out dataToTag);
                 //if (dataList[1].Equals("TCP")) //sniffer supports only TCP messages for now
-                if (dataList.Count > 4) //sniffer supports only TCP Ethernet messages for now
+                if (dataList.Count > 4) //sniffer supports only TCP and UDP Ethernet messages for now
                 {
                     counter++;
                     dataList[0] = counter.ToString();
@@ -536,21 +536,6 @@ namespace SnifferClient
             // return new CustomerPacket((PacketCount++).ToString(), packet.Timeval.ToString(), source, destination, protocol, packet.Data.Length.ToString(), info);
         }
 
-        /// <summary>
-        /// when the start button is clicked find the connected devices and starts listening to packets
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Startbutton_Click(object sender, EventArgs e)
-        {
-            // clears the existing items in the list view
-            this.Invoke(new Action(() => listView1.Items.Clear()));
-            findDevices();
-            startPacketListener();
-            // while sniffing requesting logs isnt optional
-            this.Invoke(new Action(() => requestButton.Enabled = false));
-        }
-
         public void shutdown()
         {
             if (device != null)
@@ -692,8 +677,9 @@ namespace SnifferClient
             Environment.Exit(1);
         }
 
-        private void pictureBox1_Click(object sender, EventArgs e)
+        private void stopPictureBox_Click(object sender, EventArgs e)
         {
+            counter = 0;
             device.OnPacketArrival -= new PacketArrivalEventHandler(device_OnPacketArrival);
             this.Invoke(new Action(() => requestButton.Enabled = true));
         }
@@ -726,6 +712,21 @@ namespace SnifferClient
             string wantedDate = selectedDate.Substring(6) + selectedDate.Substring(3, 2) + selectedDate.Substring(0, 2);
             string messageToSend = logRequest + "#" + wantedDate + "#" + wantedDate.Length;
             SendMessage(messageToSend);
+        }
+
+        /// <summary>
+        /// when the start button is clicked find the connected devices and starts listening to packets
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void startPictureBox_Click(object sender, EventArgs e)
+        {
+            // clears the existing items in the list view
+            this.Invoke(new Action(() => listView1.Items.Clear()));
+            findDevices();
+            startPacketListener();
+            // while sniffing requesting logs isnt optional
+            this.Invoke(new Action(() => requestButton.Enabled = false));
         }
     }
 }

@@ -42,7 +42,7 @@ namespace SnifferClient
                         var tcpPacket = (TcpPacket)packet.Extract(typeof(TcpPacket));
                         var ipPacket = (IpPacket)packet.Extract(typeof(IpPacket));
 
-                        var tcp = (TcpPacket)packet.Extract(typeof(TcpPacket));
+                        //var tcp = (TcpPacket)packet.Extract(typeof(TcpPacket));
                         string srcIp = ipPacket.SourceAddress.ToString();
                         string dstIp = ipPacket.DestinationAddress.ToString();
 
@@ -55,6 +55,25 @@ namespace SnifferClient
                         UnicodeEncoding _encoder = new UnicodeEncoding();
                         string data = System.Text.Encoding.ASCII.GetString(dataToTag, 0, dataToTag.Length);
                         info.Add(data);
+                    }
+                    else if (protocol.Equals("UDP"))
+                    {
+                        var udpPacket = (UdpPacket)packet.Extract(typeof(UdpPacket));
+                        var ipPacket = (IpPacket)packet.Extract(typeof(IpPacket));
+
+                        string srcIp = ipPacket.SourceAddress.MapToIPv4().ToString();
+                        string dstIp = ipPacket.DestinationAddress.MapToIPv4().ToString();
+
+                        info.Add(srcIp + " " + udpPacket.SourcePort.ToString());
+                        info.Add(dstIp + " " + udpPacket.DestinationPort.ToString());
+                        info.Add(udpPacket.Checksum.ToString());
+
+                        dataToTag = udpPacket.PayloadData;
+
+                        UnicodeEncoding _encoder = new UnicodeEncoding();
+                        string data = System.Text.Encoding.ASCII.GetString(dataToTag, 0, dataToTag.Length);
+                        info.Add(data);
+
                     }
                     
                 }

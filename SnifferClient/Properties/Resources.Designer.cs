@@ -63,6 +63,16 @@ namespace SnifferClient.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap play_arrow_button_circle_86280 {
+            get {
+                object obj = ResourceManager.GetObject("play-arrow-button-circle-86280", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap png_clipart_cycle_arrow_logo_illustration_silhouette_angle_monochrome_graphy_fish_dolphin_refresh_angle_marine_mammal {
             get {
                 object obj = ResourceManager.GetObject("png-clipart-cycle-arrow-logo-illustration-silhouette-angle-monochrome-graphy-fish" +

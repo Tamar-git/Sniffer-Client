@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             System.Windows.Forms.ColumnHeader ArrivalTime;
-            this.StartButton = new System.Windows.Forms.Button();
             this.listView1 = new System.Windows.Forms.ListView();
             this.SerialNumber = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ProtocolName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -37,28 +36,20 @@
             this.SourceAdd = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.DestinationAdd = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.Checksum = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.previousSniffComboBox = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.requestButton = new System.Windows.Forms.Button();
+            this.stopPictureBox = new System.Windows.Forms.PictureBox();
+            this.startPictureBox = new System.Windows.Forms.PictureBox();
             ArrivalTime = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.stopPictureBox)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.startPictureBox)).BeginInit();
             this.SuspendLayout();
             // 
             // ArrivalTime
             // 
             ArrivalTime.Text = "Arrival Time";
             ArrivalTime.Width = 94;
-            // 
-            // StartButton
-            // 
-            this.StartButton.Location = new System.Drawing.Point(12, 12);
-            this.StartButton.Name = "StartButton";
-            this.StartButton.Size = new System.Drawing.Size(75, 23);
-            this.StartButton.TabIndex = 3;
-            this.StartButton.Text = "Start Sniffing";
-            this.StartButton.UseVisualStyleBackColor = true;
-            this.StartButton.Click += new System.EventHandler(this.Startbutton_Click);
             // 
             // listView1
             // 
@@ -72,7 +63,7 @@
             this.Checksum});
             this.listView1.FullRowSelect = true;
             this.listView1.HideSelection = false;
-            this.listView1.Location = new System.Drawing.Point(12, 61);
+            this.listView1.Location = new System.Drawing.Point(12, 75);
             this.listView1.Name = "listView1";
             this.listView1.Size = new System.Drawing.Size(982, 463);
             this.listView1.TabIndex = 6;
@@ -108,17 +99,6 @@
             this.Checksum.Text = "Checksum";
             this.Checksum.Width = 74;
             // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Image = global::SnifferClient.Properties.Resources.red_square;
-            this.pictureBox1.Location = new System.Drawing.Point(93, 5);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(100, 50);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox1.TabIndex = 8;
-            this.pictureBox1.TabStop = false;
-            this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
-            // 
             // previousSniffComboBox
             // 
             this.previousSniffComboBox.FormattingEnabled = true;
@@ -138,7 +118,7 @@
             // 
             // requestButton
             // 
-            this.requestButton.Location = new System.Drawing.Point(852, 32);
+            this.requestButton.Location = new System.Drawing.Point(852, 41);
             this.requestButton.Name = "requestButton";
             this.requestButton.Size = new System.Drawing.Size(121, 23);
             this.requestButton.TabIndex = 11;
@@ -146,28 +126,50 @@
             this.requestButton.UseVisualStyleBackColor = true;
             this.requestButton.Click += new System.EventHandler(this.requestButton_Click);
             // 
+            // stopPictureBox
+            // 
+            this.stopPictureBox.Image = global::SnifferClient.Properties.Resources.red_square;
+            this.stopPictureBox.Location = new System.Drawing.Point(129, 12);
+            this.stopPictureBox.Name = "stopPictureBox";
+            this.stopPictureBox.Size = new System.Drawing.Size(100, 50);
+            this.stopPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.stopPictureBox.TabIndex = 8;
+            this.stopPictureBox.TabStop = false;
+            this.stopPictureBox.Click += new System.EventHandler(this.stopPictureBox_Click);
+            // 
+            // startPictureBox
+            // 
+            this.startPictureBox.Image = global::SnifferClient.Properties.Resources.play_arrow_button_circle_86280;
+            this.startPictureBox.Location = new System.Drawing.Point(23, 12);
+            this.startPictureBox.Name = "startPictureBox";
+            this.startPictureBox.Size = new System.Drawing.Size(100, 50);
+            this.startPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.startPictureBox.TabIndex = 12;
+            this.startPictureBox.TabStop = false;
+            this.startPictureBox.Click += new System.EventHandler(this.startPictureBox_Click);
+            // 
             // RawSockSnifferForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1006, 536);
+            this.ClientSize = new System.Drawing.Size(1006, 553);
+            this.Controls.Add(this.startPictureBox);
             this.Controls.Add(this.requestButton);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.previousSniffComboBox);
-            this.Controls.Add(this.pictureBox1);
+            this.Controls.Add(this.stopPictureBox);
             this.Controls.Add(this.listView1);
-            this.Controls.Add(this.StartButton);
             this.Name = "RawSockSnifferForm";
             this.Text = "RawSockSnifferForm";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.RawSockSnifferForm_FormClosed);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.stopPictureBox)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.startPictureBox)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
-        private System.Windows.Forms.Button StartButton;
         private System.Windows.Forms.ListView listView1;
         private System.Windows.Forms.ColumnHeader SerialNumber;
         private System.Windows.Forms.ColumnHeader ProtocolName;
@@ -176,9 +178,10 @@
         private System.Windows.Forms.ColumnHeader SourceAdd;
         private System.Windows.Forms.ColumnHeader DestinationAdd;
         private System.Windows.Forms.ColumnHeader Checksum;
-        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.PictureBox stopPictureBox;
         private System.Windows.Forms.ComboBox previousSniffComboBox;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button requestButton;
+        private System.Windows.Forms.PictureBox startPictureBox;
     }
 }
