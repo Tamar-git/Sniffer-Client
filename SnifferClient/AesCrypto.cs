@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SnifferServer
 {
-    class AesCrypto
+    public class AesCrypto
     {
         Aes aes;
 

@@ -414,7 +414,7 @@ namespace SnifferClient
             this.Invoke(new Action(() => this.Hide()));
             name = textBoxName.Text;
             // opens a new menu form that gets the tcp client
-            RawSockSnifferForm sniffer = new RawSockSnifferForm(client);
+            RawSockSnifferForm sniffer = new RawSockSnifferForm(client, aes);
             this.Invoke(new Action(() => sniffer.ShowDialog()));
             this.Invoke(new Action(() => this.Close()));
             return;

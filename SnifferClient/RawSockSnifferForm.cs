@@ -18,6 +18,7 @@ using System.Xml;
 using System.Threading;
 using System.Runtime.CompilerServices;
 using System.Diagnostics;
+using SnifferServer;
 
 namespace SnifferClient
 {
@@ -33,6 +34,8 @@ namespace SnifferClient
         int counter = 0;
         TcpClient client;
 
+        AesCrypto aes; // AES object for encryption and decryption
+
         // requests' kinds
         const int packetDetailsResponse = 1;
         const int logRequest = 2;
@@ -45,12 +48,12 @@ namespace SnifferClient
         /// <summary>
         /// constructor that initializes the sniffer form
         /// </summary>
-        public RawSockSnifferForm(TcpClient client)
+        public RawSockSnifferForm(TcpClient client, AesCrypto aes)
         {
             InitializeComponent();
             pA = new PacketAnalyzer();
             this.client = client;
-
+            this.aes = aes;
             // Read data from the client async
             data = new byte[client.ReceiveBufferSize];
 
@@ -90,8 +93,10 @@ namespace SnifferClient
                     // call EndRead to handle the end of an async read.
                     bytesRead = client.GetStream().EndRead(ar);
                 }
-
-                string messageReceived = System.Text.Encoding.ASCII.GetString(data, 0, bytesRead);
+                byte[] arrived = new byte[bytesRead];
+                Array.Copy(data, arrived, bytesRead);
+                string messageReceived = aes.DecryptStringFromBytes(arrived, aes.GetKey(), aes.GetIV());
+                //string messageReceived = System.Text.Encoding.ASCII.GetString(data, 0, bytesRead);
                 string[] arrayReceived = messageReceived.Split('#');
                 int requestNumber = Convert.ToInt32(arrayReceived[0]);
                 string details = arrayReceived[1];
@@ -99,7 +104,7 @@ namespace SnifferClient
                 {
                     ReceivingLog(details);
                 }
-                else if(requestNumber == noLogResponse)
+                else if (requestNumber == noLogResponse)
                 {
                     // shows message that indicates the absence of a file from the requested date
                     MessageBox.Show("There were no packets from the requested date, please try a different one");
@@ -197,7 +202,7 @@ namespace SnifferClient
             {
                 if (!hex.Equals(string.Empty) && !hex.Equals("\r")) // makes sure there is a hex value
                 {
-                  // Convert the number expressed in base-16 to an integer.
+                    // Convert the number expressed in base-16 to an integer.
                     int value = Convert.ToInt32(hex, 16);
                     Debug.WriteLine("hex is {0} intValue is {1}", hex, value);
                     byte b = (byte)value;
@@ -343,25 +348,36 @@ namespace SnifferClient
         /// <summary>
         /// gets a message and sends it to the server
         /// </summary>
-        /// <param name="message">string to send to the server</param>
-        private void SendMessage(string message)
+        /// <param name="message">bytes to send to the server</param>
+        private void SendMessage(byte[] message)
         {
             try
             {
                 // send message to the server
                 NetworkStream ns = client.GetStream();
-                byte[] data = System.Text.Encoding.ASCII.GetBytes(message);
+                //byte[] data = System.Text.Encoding.ASCII.GetBytes(message);
 
                 // MessageBox.Show("message to send to server: " + message);
 
                 // send the text
-                ns.Write(data, 0, data.Length);
+                ns.Write(message, 0, message.Length);
                 ns.Flush();
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.ToString());
             }
+        }
+
+        /// <summary>
+        /// gets a string message, encrypts it using Aes protocol and sends it to the server
+        /// </summary>
+        /// <param name="message">string to encrypt and send to the server</param>
+        private void SendAesEncryptedMessage(string message)
+        {
+            Debug.WriteLine("sending aes: " + message);
+            byte[] toSend = aes.EncryptStringToBytes(message, aes.GetKey(), aes.GetIV());
+            SendMessage(toSend);
         }
 
         /// <summary>
@@ -390,9 +406,10 @@ namespace SnifferClient
             }
 
             string messageToSend = packetDetailsResponse + "#" + allData + "#" + allData.Length;
-            SendMessage(messageToSend);
+            SendAesEncryptedMessage(messageToSend);
 
         }
+
         /// <summary>
         /// checks the packet's protocol
         /// </summary>
@@ -713,7 +730,7 @@ namespace SnifferClient
             //dd/MM/yyyy --> yyyyMMdd
             string wantedDate = selectedDate.Substring(6) + selectedDate.Substring(3, 2) + selectedDate.Substring(0, 2);
             string messageToSend = logRequest + "#" + wantedDate + "#" + wantedDate.Length;
-            SendMessage(messageToSend);
+            SendAesEncryptedMessage(messageToSend);
         }
 
         /// <summary>
