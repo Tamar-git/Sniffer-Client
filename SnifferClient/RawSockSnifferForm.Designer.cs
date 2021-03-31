@@ -95,12 +95,12 @@
             // SourceAdd
             // 
             this.SourceAdd.Text = "Source Address";
-            this.SourceAdd.Width = 100;
+            this.SourceAdd.Width = 120;
             // 
             // DestinationAdd
             // 
             this.DestinationAdd.Text = "Destination Address";
-            this.DestinationAdd.Width = 117;
+            this.DestinationAdd.Width = 120;
             // 
             // Checksum
             // 

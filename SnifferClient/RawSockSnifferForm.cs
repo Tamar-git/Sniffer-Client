@@ -95,7 +95,7 @@ namespace SnifferClient
                 string details = arrayReceived[1];
                 if (requestNumber == logResponse)
                 {
-                    ReccivingLog(details);
+                    ReceivingLog(details);
                 }
                 lock (client.GetStream())
                 {
@@ -109,7 +109,11 @@ namespace SnifferClient
             }
         }
 
-        public void ReccivingLog(string details)
+        /// <summary>
+        /// receives a log file
+        /// </summary>
+        /// <param name="details"></param>
+        public void ReceivingLog(string details)
         {
             string fileSize = details.Split('/')[0];
             string fileName = details.Split('/')[1];
@@ -134,10 +138,15 @@ namespace SnifferClient
             }
             string messageReceived = System.Text.Encoding.ASCII.GetString(buffer, 0, received);
             List<string> listOfPacketsData = messageReceived.Split('\n').ToList();
-            List<List<string>> listOfPacketsDataInArray = new List<List<string>>();
-            for(int i = 1; i <= listOfPacketsData.Count; i++)
+            for (int i = 0; i < listOfPacketsData.Count; i++)
             {
-                listOfPacketsData[0] = i + listOfPacketsData[0];
+                if (!listOfPacketsData[i].Equals(string.Empty) && !listOfPacketsData[i].Equals("\r"))
+                {
+                    // adds the counter field to the string
+                    listOfPacketsData[i] = (i + 1) + "," + listOfPacketsData[i];
+                    string[] line = listOfPacketsData[i].Split(',');
+                    AddLineToListView(line);
+                }
                 // needs to present every packet as a line in the form's list view
             }
 
@@ -152,10 +161,40 @@ namespace SnifferClient
             //}
         }
 
-        public void AddLineToListView(List<String> detailsToAdd, int count)
+        /// <summary>
+        /// adds an array to the list view in the form
+        /// </summary>
+        /// <param name="detailsToAdd">array of strings with the packet's data</param>
+        public void AddLineToListView(string[] detailsToAdd)
         {
+            ListViewItem item = new ListViewItem(detailsToAdd);
+            byte[] dataToTag = HexToBytes(detailsToAdd[detailsToAdd.Length - 1]);
+            item.Tag = dataToTag;
 
+            this.Invoke(new Action(() => listView1.Items.Add(item)));
         }
+
+        public static byte[] HexToBytes(string original)
+        {
+            original = original.Replace("\r", string.Empty);
+            List<string> originalList = original.Split(' ').ToList();
+            Debug.WriteLine("original: {0}, length: {1}", original, originalList.Count);
+            List<byte> bytes = new List<byte>();
+            foreach (string hex in originalList)
+            {
+                if (!hex.Equals(string.Empty) && !hex.Equals("\r"))
+                { //makes sure there is a hex value
+                  // Convert the number expressed in base-16 to an integer.
+                    int value = Convert.ToInt32(hex, 16);
+                    Debug.WriteLine("hex is {0} intValue is {1}", hex, value);
+                    byte b = (byte)value;
+                    //byte b = BitConverter.GetBytes(Int32.Parse(hex))[0];
+                    bytes.Add(b);
+                }
+            }
+            return bytes.ToArray();
+        }
+
         /// <summary>
         /// finds the devices that are available in the network
         /// </summary>
@@ -341,6 +380,11 @@ namespace SnifferClient
             }
         }
 
+        /// <summary>
+        /// sends the analyzed packet to the server
+        /// </summary>
+        /// <param name="dataList"></param>
+        /// <param name="dataToTag"></param>
         public void SendPacketDataToServer(List<string> dataList, byte[] dataToTag)
         {
             //string allData = String.Join(",", dataList.ToArray(), 0, dataList.Count - 1);
@@ -667,6 +711,10 @@ namespace SnifferClient
             device.OnPacketArrival -= new PacketArrivalEventHandler(device_OnPacketArrival);
         }
 
+        /// <summary>
+        /// gets the dates of the last week in the form of dd/MM/yyyy
+        /// </summary>
+        /// <returns>string array that contains the dates</returns>
         public static string[] GetLastWeekDates()
         {
             List<string> days = new List<string>();
@@ -679,6 +727,11 @@ namespace SnifferClient
             return days.ToArray();
         }
 
+        /// <summary>
+        /// when the selected index in the combobox changes sends a request of a log file to the server
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void previousSniffComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             string selectedDate = previousSniffComboBox.SelectedItem.ToString();

@@ -30,6 +30,10 @@ namespace SnifferServer
             return aes.Key;
         }
 
+        /// <summary>
+        /// retrieves the Aes IV
+        /// </summary>
+        /// <returns>IV</returns>
         public byte[] GetIV()
         {
             return aes.IV;
