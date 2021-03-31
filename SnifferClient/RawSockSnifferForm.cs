@@ -122,6 +122,7 @@ namespace SnifferClient
         /// <param name="details"></param>
         public void ReceivingLog(string details)
         {
+            this.Invoke(new Action(() => statusLabel.Text = "loading captured packets from " + previousSniffComboBox.SelectedItem.ToString()));
             string fileSize = details.Split('/')[0];
             string fileName = details.Split('/')[1];
             int length = Convert.ToInt32(fileSize);
@@ -157,7 +158,7 @@ namespace SnifferClient
                     AddLineToListView(line);
                 }
             }
-
+            this.Invoke(new Action(() => statusLabel.Text = "presenting captured packets from " + previousSniffComboBox.SelectedItem.ToString()));
             Debug.WriteLine(messageReceived);
             // Save the file using the filename sent by the client    
             //using (FileStream fStream = new FileStream(Path.GetFileName(cmdFileName), FileMode.Create))
@@ -682,6 +683,7 @@ namespace SnifferClient
             counter = 0;
             device.OnPacketArrival -= new PacketArrivalEventHandler(device_OnPacketArrival);
             this.Invoke(new Action(() => requestButton.Enabled = true));
+            this.Invoke(new Action(() => statusLabel.Text = "presents currently captured packets"));
         }
 
         /// <summary>
@@ -727,6 +729,7 @@ namespace SnifferClient
             startPacketListener();
             // while sniffing requesting logs isnt optional
             this.Invoke(new Action(() => requestButton.Enabled = false));
+            this.Invoke(new Action(() => statusLabel.Text = "capturing packets"));
         }
     }
 }

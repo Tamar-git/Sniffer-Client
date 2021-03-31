@@ -41,6 +41,7 @@
             this.requestButton = new System.Windows.Forms.Button();
             this.stopPictureBox = new System.Windows.Forms.PictureBox();
             this.startPictureBox = new System.Windows.Forms.PictureBox();
+            this.statusLabel = new System.Windows.Forms.Label();
             ArrivalTime = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             ((System.ComponentModel.ISupportInitialize)(this.stopPictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.startPictureBox)).BeginInit();
@@ -61,6 +62,7 @@
             this.SourceAdd,
             this.DestinationAdd,
             this.Checksum});
+            this.listView1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(177)));
             this.listView1.FullRowSelect = true;
             this.listView1.HideSelection = false;
             this.listView1.Location = new System.Drawing.Point(12, 75);
@@ -110,14 +112,16 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(687, 17);
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(177)));
+            this.label1.Location = new System.Drawing.Point(635, 14);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(159, 13);
+            this.label1.Size = new System.Drawing.Size(211, 17);
             this.label1.TabIndex = 10;
             this.label1.Text = "Load previously sniffed packets:";
             // 
             // requestButton
             // 
+            this.requestButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(177)));
             this.requestButton.Location = new System.Drawing.Point(852, 41);
             this.requestButton.Name = "requestButton";
             this.requestButton.Size = new System.Drawing.Size(121, 23);
@@ -148,11 +152,22 @@
             this.startPictureBox.TabStop = false;
             this.startPictureBox.Click += new System.EventHandler(this.startPictureBox_Click);
             // 
+            // statusLabel
+            // 
+            this.statusLabel.AutoSize = true;
+            this.statusLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(177)));
+            this.statusLabel.Location = new System.Drawing.Point(271, 14);
+            this.statusLabel.Name = "statusLabel";
+            this.statusLabel.Size = new System.Drawing.Size(79, 20);
+            this.statusLabel.TabIndex = 13;
+            this.statusLabel.Text = "Welcome!";
+            // 
             // RawSockSnifferForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1006, 553);
+            this.Controls.Add(this.statusLabel);
             this.Controls.Add(this.startPictureBox);
             this.Controls.Add(this.requestButton);
             this.Controls.Add(this.label1);
@@ -160,7 +175,7 @@
             this.Controls.Add(this.stopPictureBox);
             this.Controls.Add(this.listView1);
             this.Name = "RawSockSnifferForm";
-            this.Text = "RawSockSnifferForm";
+            this.Text = "Sniffer";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.RawSockSnifferForm_FormClosed);
             ((System.ComponentModel.ISupportInitialize)(this.stopPictureBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.startPictureBox)).EndInit();
@@ -183,5 +198,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button requestButton;
         private System.Windows.Forms.PictureBox startPictureBox;
+        private System.Windows.Forms.Label statusLabel;
     }
 }
