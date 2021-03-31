@@ -147,7 +147,7 @@ namespace SnifferClient
             this.Invoke(new Action(() => listView1.Items.Clear()));
             string messageReceived = System.Text.Encoding.ASCII.GetString(buffer, 0, received);
             List<string> listOfPacketsData = messageReceived.Split('\n').ToList();
-            for (int i = 0; i < listOfPacketsData.Count; i++)
+            for (int i = 0; i < listOfPacketsData.Count; i++) // presents every packet as a line in the form's list view
             {
                 if (!listOfPacketsData[i].Equals(string.Empty) && !listOfPacketsData[i].Equals("\r"))
                 {
@@ -156,9 +156,7 @@ namespace SnifferClient
                     string[] line = listOfPacketsData[i].Split(',');
                     AddLineToListView(line);
                 }
-                // needs to present every packet as a line in the form's list view
             }
-
 
             Debug.WriteLine(messageReceived);
             // Save the file using the filename sent by the client    
@@ -183,6 +181,11 @@ namespace SnifferClient
             this.Invoke(new Action(() => listView1.Items.Add(item)));
         }
 
+        /// <summary>
+        /// convert string that represnts hex to bytes
+        /// </summary>
+        /// <param name="original">string with the original hex</param>
+        /// <returns>converted byte array</returns>
         public static byte[] HexToBytes(string original)
         {
             original = original.Replace("\r", string.Empty);
@@ -191,13 +194,12 @@ namespace SnifferClient
             List<byte> bytes = new List<byte>();
             foreach (string hex in originalList)
             {
-                if (!hex.Equals(string.Empty) && !hex.Equals("\r"))
-                { //makes sure there is a hex value
+                if (!hex.Equals(string.Empty) && !hex.Equals("\r")) // makes sure there is a hex value
+                {
                   // Convert the number expressed in base-16 to an integer.
                     int value = Convert.ToInt32(hex, 16);
                     Debug.WriteLine("hex is {0} intValue is {1}", hex, value);
                     byte b = (byte)value;
-                    //byte b = BitConverter.GetBytes(Int32.Parse(hex))[0];
                     bytes.Add(b);
                 }
             }
@@ -296,7 +298,6 @@ namespace SnifferClient
 
                     ListViewItem item = new ListViewItem(dataList.ToArray());
                     item.Tag = dataToTag;
-                    //item.Tag = dataList[dataList.Count - 1];
 
                     this.Invoke(new Action(() => listView1.Items.Add(item)));
                     SendPacketDataToServer(dataList, dataToTag);
@@ -309,33 +310,6 @@ namespace SnifferClient
                 MessageBox.Show(e.ToString());
             }
 
-            /*LinkLayers ethType = p.LinkLayerType;
-
-                for (int i = 0; i < len; i++)
-                {
-                    int v = p.Data[i];
-                    string hexValue = v.ToString("X2");
-                    Console.Write(hexValue + " ");
-                }
-                var packet = PacketDotNet.Packet.ParsePacket(p.LinkLayerType, p.Data);
-                if (protocol.Equals("TCP"))
-                {
-
-                    var tcpPacket = (TcpPacket)packet.Extract(typeof(TcpPacket));
-                    //Console.WriteLine(tcpPacket.ToString());
-                    newData += tcpPacket.ToString();
-
-                    
-                    string bytes = "";
-                    for (int i = 0; i < len; i++)
-                    {
-                        bytes += p.Data[i].ToString("X2") + " ";
-                    }
-                    Console.WriteLine("data=" + bytes);
-                    
-                }
-               
-            }*/
         }
 
         /// <summary>
@@ -569,10 +543,13 @@ namespace SnifferClient
         /// <param name="e"></param>
         private void Startbutton_Click(object sender, EventArgs e)
         {
+            // clears the existing items in the list view
+            this.Invoke(new Action(() => listView1.Items.Clear()));
             findDevices();
             startPacketListener();
+            // while sniffing requesting logs isnt optional
+            this.Invoke(new Action(() => requestButton.Enabled = false));
         }
-
 
         public void shutdown()
         {
@@ -718,6 +695,7 @@ namespace SnifferClient
         private void pictureBox1_Click(object sender, EventArgs e)
         {
             device.OnPacketArrival -= new PacketArrivalEventHandler(device_OnPacketArrival);
+            this.Invoke(new Action(() => requestButton.Enabled = true));
         }
 
         /// <summary>
@@ -737,11 +715,11 @@ namespace SnifferClient
         }
 
         /// <summary>
-        /// when the selected index in the combobox changes sends a request of a log file to the server
+        /// when the the button is clicked sends a request of a log file to the server
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void previousSniffComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        private void requestButton_Click(object sender, EventArgs e)
         {
             string selectedDate = previousSniffComboBox.SelectedItem.ToString();
             //dd/MM/yyyy --> yyyyMMdd

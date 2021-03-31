@@ -40,6 +40,7 @@
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.previousSniffComboBox = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.requestButton = new System.Windows.Forms.Button();
             ArrivalTime = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
@@ -125,7 +126,6 @@
             this.previousSniffComboBox.Name = "previousSniffComboBox";
             this.previousSniffComboBox.Size = new System.Drawing.Size(121, 21);
             this.previousSniffComboBox.TabIndex = 9;
-            this.previousSniffComboBox.SelectedIndexChanged += new System.EventHandler(this.previousSniffComboBox_SelectedIndexChanged);
             // 
             // label1
             // 
@@ -136,11 +136,22 @@
             this.label1.TabIndex = 10;
             this.label1.Text = "Load previously sniffed packets:";
             // 
+            // requestButton
+            // 
+            this.requestButton.Location = new System.Drawing.Point(852, 32);
+            this.requestButton.Name = "requestButton";
+            this.requestButton.Size = new System.Drawing.Size(121, 23);
+            this.requestButton.TabIndex = 11;
+            this.requestButton.Text = "Send Request";
+            this.requestButton.UseVisualStyleBackColor = true;
+            this.requestButton.Click += new System.EventHandler(this.requestButton_Click);
+            // 
             // RawSockSnifferForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1006, 536);
+            this.Controls.Add(this.requestButton);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.previousSniffComboBox);
             this.Controls.Add(this.pictureBox1);
@@ -168,5 +179,6 @@
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.ComboBox previousSniffComboBox;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Button requestButton;
     }
 }
