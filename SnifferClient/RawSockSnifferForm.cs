@@ -37,6 +37,8 @@ namespace SnifferClient
         const int packetDetailsResponse = 1;
         const int logRequest = 2;
         const int logResponse = 3;
+        const int noLogResponse = 4;
+
         // used for sending and reciving data
         private byte[] data;
 
@@ -97,6 +99,11 @@ namespace SnifferClient
                 {
                     ReceivingLog(details);
                 }
+                else if(requestNumber == noLogResponse)
+                {
+                    // shows message that indicates the absence of a file from the requested date
+                    MessageBox.Show("There were no packets from the requested date, please try a different one");
+                }
                 lock (client.GetStream())
                 {
                     // continue reading from the client
@@ -136,6 +143,8 @@ namespace SnifferClient
                 read = client.GetStream().Read(buffer, received, size);
                 received += read;
             }
+            // clears the existing items in the list view
+            this.Invoke(new Action(() => listView1.Items.Clear()));
             string messageReceived = System.Text.Encoding.ASCII.GetString(buffer, 0, received);
             List<string> listOfPacketsData = messageReceived.Split('\n').ToList();
             for (int i = 0; i < listOfPacketsData.Count; i++)
