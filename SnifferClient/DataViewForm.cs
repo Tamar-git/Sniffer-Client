@@ -32,7 +32,8 @@ namespace SnifferClient
         protected override void OnHandleCreated(EventArgs e)
         {
             base.OnHandleCreated(e);
-            this.Invoke(new Action(() => this.Text = "Sniffer · packet " + packetItem.SubItems[0].Text));
+            string title = "Sniffer · packet " + packetItem.SubItems[0].Text + " · " + packetItem.SubItems[1].Text;
+            this.Invoke(new Action(() => this.Text = title));
             byte[] data = (byte[])packetItem.Tag;
             if (data.Length > 0) // if the packet came with body
             {
