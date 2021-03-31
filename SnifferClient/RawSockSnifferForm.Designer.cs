@@ -37,7 +37,7 @@
             this.DestinationAdd = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.Checksum = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.previousSniffComboBox = new System.Windows.Forms.ComboBox();
-            this.label1 = new System.Windows.Forms.Label();
+            this.chooseDateLabel = new System.Windows.Forms.Label();
             this.requestButton = new System.Windows.Forms.Button();
             this.stopPictureBox = new System.Windows.Forms.PictureBox();
             this.startPictureBox = new System.Windows.Forms.PictureBox();
@@ -89,12 +89,12 @@
             // SourceAdd
             // 
             this.SourceAdd.Text = "Source Address";
-            this.SourceAdd.Width = 120;
+            this.SourceAdd.Width = 142;
             // 
             // DestinationAdd
             // 
             this.DestinationAdd.Text = "Destination Address";
-            this.DestinationAdd.Width = 120;
+            this.DestinationAdd.Width = 142;
             // 
             // Checksum
             // 
@@ -109,15 +109,15 @@
             this.previousSniffComboBox.Size = new System.Drawing.Size(121, 21);
             this.previousSniffComboBox.TabIndex = 9;
             // 
-            // label1
+            // chooseDateLabel
             // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(177)));
-            this.label1.Location = new System.Drawing.Point(635, 14);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(211, 17);
-            this.label1.TabIndex = 10;
-            this.label1.Text = "Load previously sniffed packets:";
+            this.chooseDateLabel.AutoSize = true;
+            this.chooseDateLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(177)));
+            this.chooseDateLabel.Location = new System.Drawing.Point(621, 15);
+            this.chooseDateLabel.Name = "chooseDateLabel";
+            this.chooseDateLabel.Size = new System.Drawing.Size(225, 17);
+            this.chooseDateLabel.TabIndex = 10;
+            this.chooseDateLabel.Text = "Load previously captured packets:";
             // 
             // requestButton
             // 
@@ -126,7 +126,7 @@
             this.requestButton.Name = "requestButton";
             this.requestButton.Size = new System.Drawing.Size(121, 23);
             this.requestButton.TabIndex = 11;
-            this.requestButton.Text = "Send Request";
+            this.requestButton.Text = "Send";
             this.requestButton.UseVisualStyleBackColor = true;
             this.requestButton.Click += new System.EventHandler(this.requestButton_Click);
             // 
@@ -154,13 +154,13 @@
             // 
             // statusLabel
             // 
-            this.statusLabel.AutoSize = true;
             this.statusLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(177)));
-            this.statusLabel.Location = new System.Drawing.Point(271, 14);
+            this.statusLabel.Location = new System.Drawing.Point(249, 12);
             this.statusLabel.Name = "statusLabel";
-            this.statusLabel.Size = new System.Drawing.Size(79, 20);
+            this.statusLabel.Size = new System.Drawing.Size(362, 52);
             this.statusLabel.TabIndex = 13;
-            this.statusLabel.Text = "Welcome!";
+            this.statusLabel.Text = "Please start capturing packets or load previously captured packets from a chosen " +
+    "date";
             // 
             // RawSockSnifferForm
             // 
@@ -170,7 +170,7 @@
             this.Controls.Add(this.statusLabel);
             this.Controls.Add(this.startPictureBox);
             this.Controls.Add(this.requestButton);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.chooseDateLabel);
             this.Controls.Add(this.previousSniffComboBox);
             this.Controls.Add(this.stopPictureBox);
             this.Controls.Add(this.listView1);
@@ -195,7 +195,7 @@
         private System.Windows.Forms.ColumnHeader Checksum;
         private System.Windows.Forms.PictureBox stopPictureBox;
         private System.Windows.Forms.ComboBox previousSniffComboBox;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label chooseDateLabel;
         private System.Windows.Forms.Button requestButton;
         private System.Windows.Forms.PictureBox startPictureBox;
         private System.Windows.Forms.Label statusLabel;

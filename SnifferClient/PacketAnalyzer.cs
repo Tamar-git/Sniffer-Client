@@ -9,13 +9,16 @@ using PacketDotNet;
 using PacketDotNet.Utils;
 using SharpPcap;
 using System.IO;
+using System.Diagnostics;
+using System.Net.Http;
+using static System.Net.WebRequestMethods;
 
 namespace SnifferClient
 {
     class PacketAnalyzer
     {
         /// <summary>
-        /// analyzing the paket
+        /// analyzing the packet
         /// </summary>
         /// <param name="raw">packet</param>
         /// <returns>list of strings with the details of the packet</returns>
@@ -26,9 +29,11 @@ namespace SnifferClient
             try
             {
                 LinkLayers ethType = raw.LinkLayerType;
+                string protocol = GetPacketProtocol(raw);
+                Debug.WriteLine("protocol: " + protocol);
                 if (ethType is LinkLayers.Ethernet)
                 {
-                    string protocol = GetPacketProtocol(raw);
+
                     info.Add("0");
                     info.Add(protocol);
                     DateTime time = raw.Timeval.Date.ToLocalTime();
@@ -36,8 +41,8 @@ namespace SnifferClient
                     info.Add(raw.Data.Length.ToString());
 
                     Packet packet = PacketDotNet.Packet.ParsePacket(ethType, raw.Data);
-                    
-                    if (protocol.Equals("TCP"))
+
+                    if (protocol.Equals("TCP") || protocol.Equals("HTTP"))
                     {
                         var tcpPacket = (TcpPacket)packet.Extract(typeof(TcpPacket));
                         var ipPacket = (IpPacket)packet.Extract(typeof(IpPacket));
@@ -45,9 +50,10 @@ namespace SnifferClient
                         //var tcp = (TcpPacket)packet.Extract(typeof(TcpPacket));
                         string srcIp = ipPacket.SourceAddress.ToString();
                         string dstIp = ipPacket.DestinationAddress.ToString();
-
-                        info.Add(srcIp + " " + tcpPacket.SourcePort.ToString());
-                        info.Add(dstIp + " " + tcpPacket.DestinationPort.ToString());
+                        string srcPort = tcpPacket.SourcePort.ToString();
+                        string dstPort = tcpPacket.DestinationPort.ToString();
+                        info.Add(srcIp + " " + srcPort);
+                        info.Add(dstIp + " " + dstPort);
                         info.Add(tcpPacket.Checksum.ToString());
 
                         dataToTag = tcpPacket.PayloadData;
@@ -55,17 +61,20 @@ namespace SnifferClient
                         UnicodeEncoding _encoder = new UnicodeEncoding();
                         string data = System.Text.Encoding.ASCII.GetString(dataToTag, 0, dataToTag.Length);
                         info.Add(data);
+
+
                     }
-                    else if (protocol.Equals("UDP"))
+                    else if (protocol.Equals("UDP") || protocol.Equals("SSDP") || protocol.Equals("DNS"))
                     {
                         var udpPacket = (UdpPacket)packet.Extract(typeof(UdpPacket));
                         var ipPacket = (IpPacket)packet.Extract(typeof(IpPacket));
 
                         string srcIp = ipPacket.SourceAddress.MapToIPv4().ToString();
                         string dstIp = ipPacket.DestinationAddress.MapToIPv4().ToString();
-
-                        info.Add(srcIp + " " + udpPacket.SourcePort.ToString());
-                        info.Add(dstIp + " " + udpPacket.DestinationPort.ToString());
+                        string srcPort = udpPacket.SourcePort.ToString();
+                        string dstPort = udpPacket.DestinationPort.ToString();
+                        info.Add(srcIp + " " + srcPort);
+                        info.Add(dstIp + " " + dstPort);
                         info.Add(udpPacket.Checksum.ToString());
 
                         dataToTag = udpPacket.PayloadData;
@@ -75,7 +84,46 @@ namespace SnifferClient
                         info.Add(data);
 
                     }
-                    
+                    //else if (protocol.Equals("ARP"))
+                    //{
+                    //    var arpPacket = (ARPPacket)packet.Extract(typeof(ARPPacket));
+                    //    var ipPacket = (IpPacket)packet.Extract(typeof(IpPacket));
+
+                    //    string srcIp = ipPacket.SourceAddress.MapToIPv4().ToString();
+                    //    string dstIp = ipPacket.DestinationAddress.MapToIPv4().ToString();
+                    //    string srcPort = arpPacket.SourcePort.ToString();
+                    //    string dstPort = udpPacket.DestinationPort.ToString();
+                    //    info.Add(srcIp + " " + srcPort);
+                    //    info.Add(dstIp + " " + dstPort);
+                    //    info.Add(udpPacket.Checksum.ToString());
+
+                    //    dataToTag = udpPacket.PayloadData;
+
+                    //    UnicodeEncoding _encoder = new UnicodeEncoding();
+                    //    string data = System.Text.Encoding.ASCII.GetString(dataToTag, 0, dataToTag.Length);
+                    //    info.Add(data);
+                    //}
+                    /*else if (protocol.Equals("HTTP"))
+                    {
+                        var httpPacket = (ApplicationPacket)packet.Extract(typeof(ApplicationPacket));
+                        var ipPacket = (IpPacket)packet.Extract(typeof(IpPacket));
+
+                        string srcIp = ipPacket.SourceAddress.MapToIPv4().ToString();
+                        string dstIp = ipPacket.DestinationAddress.MapToIPv4().ToString();
+                        var http = new System.Net.Http();
+                        http.Packet = packet;
+                        
+                        System.Net.Http.()
+                        info.Add(srcIp + " " + httpPacket..SourcePort.ToString());
+                        info.Add(dstIp + " " + udpPacket.DestinationPort.ToString());
+                        info.Add(udpPacket.Checksum.ToString());
+
+                        dataToTag = udpPacket.PayloadData;
+
+                        UnicodeEncoding _encoder = new UnicodeEncoding();
+                        string data = System.Text.Encoding.ASCII.GetString(dataToTag, 0, dataToTag.Length);
+                        info.Add(data);
+                    }*/
                 }
                 return info;
             }
@@ -85,40 +133,6 @@ namespace SnifferClient
                 return info;
             }
         }
-
-        /// <summary>
-        /// retrieves the header and body of the packet
-        /// </summary>
-        /// <param name="raw">raw packet</param>
-        /// <returns>string contains the packet's data</returns>
-        public string GetInfo(RawCapture raw)
-        {
-            try
-            {
-                LinkLayers ethType = raw.LinkLayerType;
-                string protocol = GetPacketProtocol(raw);
-                string newData = "";
-
-                DateTime time = raw.Timeval.Date;
-                int len = raw.Data.Length;
-                newData += String.Format("{0}:{1}:{2},{3} Len={4}  type = {5}  protocol = {6}",
-                    time.Hour, time.Minute, time.Second, time.Millisecond, len, ethType, protocol);
-                Packet packet = PacketDotNet.Packet.ParsePacket(ethType, raw.Data);
-                if (protocol.Equals("TCP"))
-                {
-                    var tcpPacket = (TcpPacket)packet.Extract(typeof(TcpPacket));
-                    newData += tcpPacket.ToString();
-                }
-
-                return newData;
-            }
-            catch (Exception e)
-            {
-                System.Windows.Forms.MessageBox.Show(e.ToString());
-                return e.ToString();
-            }
-        }
-
 
 
         /// <summary>
@@ -145,13 +159,17 @@ namespace SnifferClient
                 if (tempPacket is PacketDotNet.ApplicationPacket)
                 {
                     var applicationPacket = tempPacket as PacketDotNet.ApplicationPacket;
-                    string headerString = "";
+                    string headerString1 = "", headerString2 = "";
+                    for (int index = 0; index < 4; ++index)
+                    {
+                        headerString1 += applicationPacket.Header[index].ToString();
+                    }
                     for (int index = 12; index <= 15; ++index)
                     {
-                        headerString += applicationPacket.Header[index].ToString();
+                        headerString2 += applicationPacket.Header[index].ToString();
                     }
 
-                    if (headerString.CompareTo("HTTP") == 0)
+                    if (headerString1.Equals("HTTP") || headerString2.Equals("HTTP"))
                     {
                         protocol = "HTTP";
                     }
@@ -175,11 +193,11 @@ namespace SnifferClient
                     source = ipPacket.SourceAddress.ToString();
                     destination = ipPacket.DestinationAddress.ToString();
                     var tcpPacket = tempPacket as PacketDotNet.TcpPacket;
-                    if ((tcpPacket.DestinationPort.ToString().CompareTo("80") == 0) || (tcpPacket.DestinationPort.ToString().CompareTo("8080") == 0))
+                    if ((tcpPacket.DestinationPort.ToString().Equals("80")) || (tcpPacket.DestinationPort.ToString().Equals("8080")))
                     {
                         protocol = "HTTP";
                     }
-                    else if (tcpPacket.DestinationPort.ToString().CompareTo("1900") == 0)
+                    else if (tcpPacket.DestinationPort.ToString().Equals("1900"))
                     {
                         protocol = "SSDP";
                     }
@@ -192,14 +210,19 @@ namespace SnifferClient
                     source = ipPacket.SourceAddress.ToString();
                     destination = ipPacket.DestinationAddress.ToString();
                     var udpPacket = tempPacket as PacketDotNet.UdpPacket;
-                    if (udpPacket.DestinationPort.ToString().CompareTo("80") == 0 || udpPacket.DestinationPort.ToString().CompareTo("8080") == 0)
+                    if (udpPacket.DestinationPort.ToString().Equals("80") || udpPacket.DestinationPort.ToString().Equals("8080"))
                     {
                         protocol = "HTTP";
                     }
-                    else if (udpPacket.DestinationPort.ToString().CompareTo("1900") == 0)
+                    else if (udpPacket.DestinationPort.ToString().Equals("1900"))
                     {
                         protocol = "SSDP";
                     }
+                    else if (udpPacket.DestinationPort.ToString().Equals("53") || udpPacket.SourcePort.ToString().Equals("53"))
+                    {
+                        protocol = "DNS";
+                    }
+
                 }
                 else if (tempPacket is PacketDotNet.IpPacket)
                 {

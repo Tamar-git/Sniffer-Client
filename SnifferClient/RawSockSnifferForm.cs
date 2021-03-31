@@ -375,7 +375,7 @@ namespace SnifferClient
         /// <param name="message">string to encrypt and send to the server</param>
         private void SendAesEncryptedMessage(string message)
         {
-            Debug.WriteLine("sending aes: " + message);
+            //Debug.WriteLine("sending aes: " + message);
             byte[] toSend = aes.EncryptStringToBytes(message, aes.GetKey(), aes.GetIV());
             SendMessage(toSend);
         }
@@ -697,10 +697,10 @@ namespace SnifferClient
 
         private void stopPictureBox_Click(object sender, EventArgs e)
         {
-            counter = 0;
             device.OnPacketArrival -= new PacketArrivalEventHandler(device_OnPacketArrival);
             this.Invoke(new Action(() => requestButton.Enabled = true));
-            this.Invoke(new Action(() => statusLabel.Text = "presents currently captured packets"));
+            this.Invoke(new Action(() => statusLabel.Text = "Capturing stopped\npresents currently captured packets"));
+            counter = 0;
         }
 
         /// <summary>
