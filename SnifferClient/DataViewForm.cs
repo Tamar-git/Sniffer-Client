@@ -12,7 +12,7 @@ namespace SnifferClient
 {
     public partial class DataViewForm : Form
     {
-        private ListViewItem packetItem;
+        private ListViewItem packetItem; // stores the chosen packet data
 
         /// <summary>
         /// constructor that initializes the form
@@ -37,7 +37,6 @@ namespace SnifferClient
             byte[] data = (byte[])packetItem.Tag;
             if (data.Length > 0) // if the packet came with body
             {
-                this.Invoke(new Action(() => introLabel.Text = "packet's data:"));
                 this.Invoke(new Action(() => HexData()));
                 this.Invoke(new Action(() => DecData()));
             }
@@ -52,8 +51,8 @@ namespace SnifferClient
         /// </summary>
         public void NoDataForm()
         {
-            introLabel.Text = "the packet has no body";
-            asciiIntroLabel.Visible = false;
+            introLabel.Text = "The Packet Has No Body.";
+            this.introLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(177))); asciiIntroLabel.Visible = false;
             hexIntroLabel.Visible = false;
             asciiLabel.Visible = false;
             hexLabel.Visible = false;
@@ -112,7 +111,6 @@ namespace SnifferClient
         {
             this.Invoke(new Action(() => this.Close()));
         }
-
 
     }
 }

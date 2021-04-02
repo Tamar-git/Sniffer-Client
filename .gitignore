@@ -338,3 +338,5 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
+/SnifferClient/_site/api
+/SnifferClient/_site

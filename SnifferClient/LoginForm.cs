@@ -14,7 +14,6 @@ using System.Windows.Forms;
 using Microsoft.VisualBasic;
 using SnifferServer;
 using System.Diagnostics;
-using System.Reflection.Emit;
 
 namespace SnifferClient
 {
@@ -26,27 +25,28 @@ namespace SnifferClient
         private TcpClient client; // client Socket
         private byte[] data; //stores the data that sends to & from the server
 
-        Captcha captcha = new Captcha();
-        string captchaCode;
+        Captcha captcha = new Captcha(); // object to creat captcha
+        string captchaCode; // stores the current correct captch code
 
         // Create a UnicodeEncoder to convert between byte array and string.
         UnicodeEncoding ByteConverter = new UnicodeEncoding();
 
-        RsaCrypto rsa;
-        AesCrypto aes;
+        RsaCrypto rsa; // RSA object for encryption and decryption
+        AesCrypto aes; // AES object for encryption and decryption
+
         // requests' kinds
         const int signUpRequest = 1;
         const int signInRequest = 2;
         const int registerStatusResponse = 3;
         const int QuestionRequest = 4;
-        const int EmailResponse = 5;
-        const int CodeRequest = 6;
+        const int EmailRequest = 5;
+        const int CodeResponse = 6;
         const int QuestionResponse = 7;
-        const int AnswerRequest = 8;
+        const int AnswerResponse = 8;
         const int PasswordRequest = 9;
         const int PasswordResponse = 10;
         const int PasswordChangeStatusResponse = 11;
-        const int PublicKeyTransfer = 12;
+        const int RSAPublicKeyTransfer = 12;
         const int AesKeyTransfer = 13;
 
         /// <summary>
@@ -62,35 +62,16 @@ namespace SnifferClient
             // Read data from the client async
             data = new byte[client.ReceiveBufferSize];
 
-            //SendMessage("AAAAAA");
-            /// test to the sniffer part
-            NetworkStream ns;
-
-            // we use lock to present multiple threads from using the networkstream object
-            // this is likely to occur when the server is connected to multiple clients all of 
-            // them trying to access to the networkstram at the same time.
-            lock (client.GetStream())
-            {
-                ns = client.GetStream();
-            }
-
-            // Send data to the client
-            //byte[] bytesToSend = { 0, 1, 0, 1, 0, 1, 0, 1 };
-            //ns.Write(bytesToSend, 0, bytesToSend.Length);
-            //ns.Flush();
-
+            // initializes the captcha
             captchaCode = RandomString(6);
             pictureBoxCaptcha.Image = captcha.ProcessRequest(captchaCode);
 
+            // creates a RSA object and sends its public key to the server
             rsa = new RsaCrypto();
-            /*string s = "hello";
-            string s2 = rsa.Encrypt(s);
-            MessageBox.Show(s2);
-            s2 = rsa.Decrypt(s2);
-            MessageBox.Show(s2);*/
-            string messageToSend = PublicKeyTransfer + "#" + rsa.GetClientPublicKey() + "#" + rsa.GetClientPublicKey().Length;
+            string messageToSend = RSAPublicKeyTransfer + "#" + rsa.GetClientPublicKey() + "#" + rsa.GetClientPublicKey().Length;
             SendMessage(ByteConverter.GetBytes(messageToSend));
 
+            // start reading data
             client.GetStream().BeginRead(data,
                                         0,
                                         System.Convert.ToInt32(client.ReceiveBufferSize),
@@ -108,9 +89,6 @@ namespace SnifferClient
             {
                 // send message to the server
                 NetworkStream ns = client.GetStream();
-                //byte[] data = System.Text.Encoding.ASCII.GetBytes(message);
-
-                // MessageBox.Show("message to send to server: " + message);
 
                 // send the text
                 ns.Write(message, 0, message.Length);
@@ -124,24 +102,13 @@ namespace SnifferClient
         }
 
         /// <summary>
-        /// gets a string message, encrypts it using Rsa protocol and sends it to the server
-        /// </summary>
-        /// <param name="message">string to encrypt and send to the server</param>
-        private void SendRsaEncryptedMessage(string message)
-        {
-            Debug.WriteLine("sending rsa: " + message);
-            SendMessage(rsa.RSAEncrypt(ByteConverter.GetBytes(message)));
-        }
-
-        /// <summary>
-        /// gets a string message, encrypts it using Aes protocol and sends it to the server
+        /// gets a string message, encrypts it using AES protocol and sends it to the server
         /// </summary>
         /// <param name="message">string to encrypt and send to the server</param>
         private void SendAesEncryptedMessage(string message)
         {
             Debug.WriteLine("sending aes: " + message);
             byte[] toSend = aes.EncryptStringToBytes(message, aes.GetKey(), aes.GetIV());
-            //byte[] toSend = System.Text.Encoding.ASCII.GetBytes(message);
             SendMessage(toSend);
         }
 
@@ -170,42 +137,27 @@ namespace SnifferClient
                     bytesRead = client.GetStream().EndRead(ar);
                 }
 
-                if (rsa.ServerPublicKey == null)
+                if (rsa.ServerPublicKey == null) // if RSA object is missing server's public key
                 {
                     rsa.SetServerPublicKey(ByteConverter.GetString(data).Split('#')[1]);
                     // creates an Aes instance for symmetric encryption and sends the key to the server
                     aes = new AesCrypto();
                     byte[] bytesArray = AesKeyAndIVBytesToSend(aes.GetKey(), aes.GetIV());
-                    //SendMessage(bytesArray);
                     SendRsaEncryptedMessage(bytesArray);
-
-                    /*string key = ByteConverter.GetString(aes.GetKey());
-                    string iv = ByteConverter.GetString(aes.GetIV());
-                    string aesDetails = key + "/" + iv;
-                    Debug.WriteLine("Key: " + BytesToString(aes.GetKey()) + "\nIV: " + BytesToString(aes.GetIV()));
-                    string toSend = AesKeyTransfer + "#" + aesDetails + "#" + aesDetails.Length;
-                    Debug.WriteLine("to send: " + toSend);
-                    //SendRsaEncryptedMessage(toSend);
-                    byte[] bytesToSend = ByteConverter.GetBytes(toSend);
-                    Debug.WriteLine("bytes to send: " + BytesToString(bytesToSend));
-                    SendMessage(bytesToSend);*/
                 }
                 else
                 {
                     byte[] arrived = new byte[bytesRead];
                     Array.Copy(data, arrived, bytesRead);
                     string messageReceived;
-                    if (aes == null)
+                    if (aes == null) // if AES object wasn't initialize yet
                     {
-                        //byte[] bytesDecrypted = rsa.RSADecrypt(arrived);
-                        //messageReceived = ByteConverter.GetString(bytesDecrypted);
                         messageReceived = ByteConverter.GetString(arrived);
                     }
                     else
                     {
                         messageReceived = aes.DecryptStringFromBytes(arrived, aes.GetKey(), aes.GetIV());
                     }
-                    //string messageReceived = System.Text.Encoding.ASCII.GetString(bytesDecrypted, 0, bytesDecrypted.Length);
                     Debug.WriteLine("received: " + messageReceived);
                     string[] arrayReceived = messageReceived.Split('#');
                     int requestNumber = Convert.ToInt32(arrayReceived[0]);
@@ -228,11 +180,11 @@ namespace SnifferClient
                         }
 
                     }
-                    else if (requestNumber == EmailResponse)
+                    else if (requestNumber == EmailRequest)
                     {
                         string answer = Interaction.InputBox("Please enter the code that has just been sent to your email address:", "Email verification");
                         string textToSend = text + "/" + answer;
-                        SendAesEncryptedMessage(CodeRequest + "#" + textToSend + "#" + textToSend.Length);
+                        SendAesEncryptedMessage(CodeResponse + "#" + textToSend + "#" + textToSend.Length);
                     }
                     else if (requestNumber == QuestionResponse)
                     {
@@ -240,7 +192,7 @@ namespace SnifferClient
                         if (textArray.Length > 1)
                             MessageBox.Show("Please try again");
                         string answer = Interaction.InputBox(textArray[0], "Changing Password");
-                        SendAesEncryptedMessage(AnswerRequest + "#" + answer + "#" + answer.Length);
+                        SendAesEncryptedMessage(AnswerResponse + "#" + answer + "#" + answer.Length);
                     }
                     else if (requestNumber == PasswordRequest)
                     {
@@ -257,7 +209,7 @@ namespace SnifferClient
                             SendAesEncryptedMessage(PasswordResponse + "#" + password + "#" + password.Length);
                         }
                     }
-                    else if (requestNumber == PublicKeyTransfer)
+                    else if (requestNumber == RSAPublicKeyTransfer)
                     {
                         rsa.SetServerPublicKey(text);
                     }
@@ -297,9 +249,8 @@ namespace SnifferClient
             {
                 Debug.WriteLine("signing in?");
                 SendAesEncryptedMessage(signInRequest + "#" + toSend + "#" + toSend.Length);
-                //SendMessage(signInRequest + "#" + toSend + "#" + toSend.Length);
             }
-            else
+            else // sign up
             {
                 Debug.WriteLine("signing up?");
                 toSend += "/" + textBoxEmail.Text + "/" + comboBoxQuestions.SelectedItem.ToString() + "/" + textBoxAnswer.Text;
@@ -408,6 +359,9 @@ namespace SnifferClient
             pictureBoxCaptcha.Image = captcha.ProcessRequest(captchaCode);
         }
 
+        /// <summary>
+        /// opens the sniffer form and closes the login form
+        /// </summary>
         public void OpenSnifferForm()
         {
             // hides the last form
@@ -420,6 +374,11 @@ namespace SnifferClient
             return;
         }
 
+        /// <summary>
+        /// converts bytes to string in decimal base
+        /// </summary>
+        /// <param name="arr">bytes to convert</param>
+        /// <returns>converted string</returns>
         public static string BytesToString(byte[] arr)
         {
             string s = "";

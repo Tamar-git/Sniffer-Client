@@ -39,11 +39,12 @@
             // introLabel
             // 
             this.introLabel.AutoSize = true;
+            this.introLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(177)));
             this.introLabel.Location = new System.Drawing.Point(38, 23);
             this.introLabel.Name = "introLabel";
-            this.introLabel.Size = new System.Drawing.Size(35, 13);
+            this.introLabel.Size = new System.Drawing.Size(126, 20);
             this.introLabel.TabIndex = 0;
-            this.introLabel.Text = "label1";
+            this.introLabel.Text = "Packet\'s Data:";
             // 
             // closeButton
             // 
@@ -74,18 +75,20 @@
             // hexIntroLabel
             // 
             this.hexIntroLabel.AutoSize = true;
+            this.hexIntroLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(177)));
             this.hexIntroLabel.Location = new System.Drawing.Point(41, 71);
             this.hexIntroLabel.Name = "hexIntroLabel";
-            this.hexIntroLabel.Size = new System.Drawing.Size(112, 13);
+            this.hexIntroLabel.Size = new System.Drawing.Size(147, 17);
             this.hexIntroLabel.TabIndex = 4;
             this.hexIntroLabel.Text = "bytes as HexaDecimal";
             // 
             // asciiIntroLabel
             // 
             this.asciiIntroLabel.AutoSize = true;
+            this.asciiIntroLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(177)));
             this.asciiIntroLabel.Location = new System.Drawing.Point(692, 71);
             this.asciiIntroLabel.Name = "asciiIntroLabel";
-            this.asciiIntroLabel.Size = new System.Drawing.Size(76, 13);
+            this.asciiIntroLabel.Size = new System.Drawing.Size(98, 17);
             this.asciiIntroLabel.TabIndex = 5;
             this.asciiIntroLabel.Text = "bytes as ASCII";
             // 
