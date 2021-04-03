@@ -32,7 +32,7 @@ namespace SnifferClient
         protected override void OnHandleCreated(EventArgs e)
         {
             base.OnHandleCreated(e);
-            string title = "Sniffer · packet " + packetItem.SubItems[0].Text + " · " + packetItem.SubItems[1].Text;
+            string title = "CAPCKET · packet " + packetItem.SubItems[0].Text + " · " + packetItem.SubItems[1].Text;
             this.Invoke(new Action(() => this.Text = title));
             byte[] data = (byte[])packetItem.Tag;
             if (data.Length > 0) // if the packet came with body
@@ -51,11 +51,11 @@ namespace SnifferClient
         /// </summary>
         public void NoDataForm()
         {
-            introLabel.Text = "The Packet Has No Body.";
-            this.introLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(177))); asciiIntroLabel.Visible = false;
+            introLabel.Text = "The packet has an empty body.";
+            this.introLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(177))); asciiIntroLabel.Visible = false;
             hexIntroLabel.Visible = false;
-            asciiLabel.Visible = false;
-            hexLabel.Visible = false;
+            asciiTextBox.Visible = false;
+            hexTextBox.Visible = false;
         }
 
         /// <summary>
@@ -70,7 +70,7 @@ namespace SnifferClient
             {
                 s += b.ToString("X") + " ";
             }
-            hexLabel.Text = s;
+            hexTextBox.Text = s;
         }
 
         /// <summary>
@@ -88,7 +88,7 @@ namespace SnifferClient
                 else
                     s += "·  ";
             }
-            asciiLabel.Text = s;
+            asciiTextBox.Text = s;
         }
 
         /// <summary>

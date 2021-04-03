@@ -102,7 +102,7 @@ namespace SnifferClient
                 else if (requestNumber == noLogResponse)
                 {
                     // shows message that indicates the absence of a file from the requested date
-                    MessageBox.Show("There were no packets from the requested date, please try a different one");
+                    MessageBox.Show("There were no packets from the selected date\nPlease select a different date", "CAPCKET");
                 }
                 lock (client.GetStream())
                 {
@@ -122,7 +122,11 @@ namespace SnifferClient
         /// <param name="details">info about the log that will arrive</param>
         public void ReceivingLog(string details)
         {
-            this.Invoke(new Action(() => statusLabel.Text = "loading captured packets from " + previousSniffComboBox.SelectedItem.ToString()));
+            this.Invoke(new Action(() => statusLabel.Text = "Loading captured packets from " + previousSniffComboBox.SelectedItem.ToString()));
+            this.Invoke(new Action(() => startPictureBox.Enabled = false));
+            this.Invoke(new Action(() => stopPictureBox.Enabled = false));
+            this.Invoke(new Action(() => startPictureBox.Image =Properties.Resources.play_arrow_button_circle_86280_gray));
+            this.Invoke(new Action(() => stopPictureBox.Image = Properties.Resources.red_square_gray));
             string fileSize = details.Split('/')[0];
             string fileName = details.Split('/')[1];
             int length = Convert.ToInt32(fileSize);
@@ -158,7 +162,11 @@ namespace SnifferClient
                     AddLineToListView(line);
                 }
             }
-            this.Invoke(new Action(() => statusLabel.Text = "presenting captured packets from " + previousSniffComboBox.SelectedItem.ToString()));
+            this.Invoke(new Action(() => statusLabel.Text = "Displaying captured packets from " + previousSniffComboBox.SelectedItem.ToString()));
+            this.Invoke(new Action(() => startPictureBox.Enabled = true));
+            this.Invoke(new Action(() => stopPictureBox.Enabled = true));
+            this.Invoke(new Action(() => startPictureBox.Image = Properties.Resources.play_arrow_button_circle_86280));
+            this.Invoke(new Action(() => stopPictureBox.Image = Properties.Resources.red_square));
             Debug.WriteLine(messageReceived);
 
         }
@@ -388,7 +396,10 @@ namespace SnifferClient
         /// <param name="e"></param>
         private void RawSockSnifferForm_FormClosed(object sender, FormClosedEventArgs e)
         {
-            device.OnPacketArrival -= new PacketArrivalEventHandler(device_OnPacketArrival);
+            if (device != null)
+            {
+                device.OnPacketArrival -= new PacketArrivalEventHandler(device_OnPacketArrival);
+            }
             Environment.Exit(1);
         }
 
@@ -403,11 +414,11 @@ namespace SnifferClient
             {
                 device.OnPacketArrival -= new PacketArrivalEventHandler(device_OnPacketArrival);
                 this.Invoke(new Action(() => requestButton.Enabled = true));
-                this.Invoke(new Action(() => statusLabel.Text = "Capturing stopped\npresents currently captured packets"));
+                this.Invoke(new Action(() => statusLabel.Text = "Capturing stopped\nDisplaying recently captured packets"));
                 counter = 0;
             }
         }
-            
+
 
         /// <summary>
         /// gets the dates of the last week in the form of dd/MM/yyyy
@@ -452,7 +463,8 @@ namespace SnifferClient
             startPacketListener();
             // while sniffing requesting logs isnt optional
             this.Invoke(new Action(() => requestButton.Enabled = false));
-            this.Invoke(new Action(() => statusLabel.Text = "capturing packets"));
+            this.Invoke(new Action(() => statusLabel.Text = "Capturing packets"));
         }
+
     }
 }

@@ -28,12 +28,15 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DataViewForm));
             this.introLabel = new System.Windows.Forms.Label();
             this.closeButton = new System.Windows.Forms.Button();
-            this.hexLabel = new System.Windows.Forms.Label();
-            this.asciiLabel = new System.Windows.Forms.Label();
             this.hexIntroLabel = new System.Windows.Forms.Label();
             this.asciiIntroLabel = new System.Windows.Forms.Label();
+            this.hexTextBox = new System.Windows.Forms.TextBox();
+            this.asciiTextBox = new System.Windows.Forms.TextBox();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // introLabel
@@ -48,29 +51,13 @@
             // 
             // closeButton
             // 
-            this.closeButton.Location = new System.Drawing.Point(1253, 715);
+            this.closeButton.Location = new System.Drawing.Point(1264, 635);
             this.closeButton.Name = "closeButton";
             this.closeButton.Size = new System.Drawing.Size(75, 23);
             this.closeButton.TabIndex = 1;
             this.closeButton.Text = "Close";
             this.closeButton.UseVisualStyleBackColor = true;
             this.closeButton.Click += new System.EventHandler(this.closeButton_Click);
-            // 
-            // hexLabel
-            // 
-            this.hexLabel.Location = new System.Drawing.Point(41, 101);
-            this.hexLabel.Name = "hexLabel";
-            this.hexLabel.Size = new System.Drawing.Size(625, 610);
-            this.hexLabel.TabIndex = 2;
-            this.hexLabel.Text = "label1";
-            // 
-            // asciiLabel
-            // 
-            this.asciiLabel.Location = new System.Drawing.Point(692, 101);
-            this.asciiLabel.Name = "asciiLabel";
-            this.asciiLabel.Size = new System.Drawing.Size(625, 610);
-            this.asciiLabel.TabIndex = 3;
-            this.asciiLabel.Text = "label1";
             // 
             // hexIntroLabel
             // 
@@ -92,19 +79,52 @@
             this.asciiIntroLabel.TabIndex = 5;
             this.asciiIntroLabel.Text = "bytes as ASCII";
             // 
+            // hexTextBox
+            // 
+            this.hexTextBox.Location = new System.Drawing.Point(44, 101);
+            this.hexTextBox.Multiline = true;
+            this.hexTextBox.Name = "hexTextBox";
+            this.hexTextBox.ReadOnly = true;
+            this.hexTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.hexTextBox.Size = new System.Drawing.Size(489, 520);
+            this.hexTextBox.TabIndex = 6;
+            // 
+            // asciiTextBox
+            // 
+            this.asciiTextBox.Location = new System.Drawing.Point(695, 101);
+            this.asciiTextBox.Multiline = true;
+            this.asciiTextBox.Name = "asciiTextBox";
+            this.asciiTextBox.ReadOnly = true;
+            this.asciiTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.asciiTextBox.Size = new System.Drawing.Size(489, 520);
+            this.asciiTextBox.TabIndex = 7;
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = global::SnifferClient.Properties.Resources.CAPCKET_logo_red_cut_removebg_preview;
+            this.pictureBox1.Location = new System.Drawing.Point(1219, 31);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(100, 50);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox1.TabIndex = 8;
+            this.pictureBox1.TabStop = false;
+            // 
             // DataViewForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1340, 750);
+            this.ClientSize = new System.Drawing.Size(1351, 670);
+            this.Controls.Add(this.pictureBox1);
+            this.Controls.Add(this.asciiTextBox);
+            this.Controls.Add(this.hexTextBox);
             this.Controls.Add(this.asciiIntroLabel);
             this.Controls.Add(this.hexIntroLabel);
-            this.Controls.Add(this.asciiLabel);
-            this.Controls.Add(this.hexLabel);
             this.Controls.Add(this.closeButton);
             this.Controls.Add(this.introLabel);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "DataViewForm";
-            this.Text = "DataViewForm";
+            this.Text = "CAPCKET";
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -114,9 +134,10 @@
 
         private System.Windows.Forms.Label introLabel;
         private System.Windows.Forms.Button closeButton;
-        private System.Windows.Forms.Label hexLabel;
-        private System.Windows.Forms.Label asciiLabel;
         private System.Windows.Forms.Label hexIntroLabel;
         private System.Windows.Forms.Label asciiIntroLabel;
+        private System.Windows.Forms.TextBox hexTextBox;
+        private System.Windows.Forms.TextBox asciiTextBox;
+        private System.Windows.Forms.PictureBox pictureBox1;
     }
 }

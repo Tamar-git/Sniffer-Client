@@ -63,9 +63,39 @@ namespace SnifferClient.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap CAPCKET_logo_cut_removebg_preview {
+            get {
+                object obj = ResourceManager.GetObject("CAPCKET_logo_cut-removebg-preview", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap CAPCKET_logo_red_cut_removebg_preview {
+            get {
+                object obj = ResourceManager.GetObject("CAPCKET_logo_red_cut-removebg-preview", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap play_arrow_button_circle_86280 {
             get {
                 object obj = ResourceManager.GetObject("play-arrow-button-circle-86280", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap play_arrow_button_circle_86280_gray {
+            get {
+                object obj = ResourceManager.GetObject("play-arrow-button-circle-86280 gray", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -87,6 +117,16 @@ namespace SnifferClient.Properties {
         internal static System.Drawing.Bitmap red_square {
             get {
                 object obj = ResourceManager.GetObject("red square", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap red_square_gray {
+            get {
+                object obj = ResourceManager.GetObject("red square gray", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

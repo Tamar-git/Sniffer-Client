@@ -2,7 +2,6 @@
 using System.Web;
 using System.Drawing;
 using System.IO;
-// using System.Web.SessionState;
 using System.Drawing.Imaging;
 using System.Drawing.Text;
 using System.Drawing.Drawing2D;
@@ -102,11 +101,4 @@ public class Captcha
         return oOutputBitmap;
     }
 
-    public bool IsReusable
-    {
-        get
-        {
-            return false;
-        }
-    }
 }

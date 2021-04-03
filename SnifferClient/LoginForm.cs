@@ -168,7 +168,7 @@ namespace SnifferClient
                         if (text.Equals("ok"))
                         {
                             name = textBoxName.Text;
-                            MessageBox.Show("valid details");
+                            //MessageBox.Show("valid details");
 
                             OpenSnifferForm();
                             return;
@@ -176,13 +176,13 @@ namespace SnifferClient
                         }
                         else if (text.Equals("not ok"))
                         {
-                            MessageBox.Show("invalid username or password, please try again");
+                            MessageBox.Show("Wrong username or password\nPlease try again", "CAPCKET login error");
                         }
 
                     }
                     else if (requestNumber == EmailRequest)
                     {
-                        string answer = Interaction.InputBox("Please enter the code that has just been sent to your email address:", "Email verification");
+                        string answer = CreateInteractionForm("Please enter the code that was sent to your email address:", "CAPCKET email verification");
                         string textToSend = text + "/" + answer;
                         SendAesEncryptedMessage(CodeResponse + "#" + textToSend + "#" + textToSend.Length);
                     }
@@ -190,22 +190,22 @@ namespace SnifferClient
                     {
                         string[] textArray = text.Split('/');
                         if (textArray.Length > 1)
-                            MessageBox.Show("Please try again");
-                        string answer = Interaction.InputBox(textArray[0], "Changing Password");
+                            MessageBox.Show("Wrong answer\nPlease try again", "CAPCKET login error");
+                        string answer = CreateInteractionForm(textArray[0], "CAPCKET changing password");
                         SendAesEncryptedMessage(AnswerResponse + "#" + answer + "#" + answer.Length);
                     }
                     else if (requestNumber == PasswordRequest)
                     {
-                        string password = Interaction.InputBox("Please enter a new password:", "Changing Password");
+                        string password = CreateInteractionForm("Please enter a new password:", "CAPCKET changing password");
                         SendAesEncryptedMessage(PasswordResponse + "#" + password + "#" + password.Length);
                     }
                     else if (requestNumber == PasswordChangeStatusResponse)
                     {
                         if (text.Equals("ok"))
-                            MessageBox.Show("password changed successfully");
+                            MessageBox.Show("Password changed successfully", "CAPCKET login · changing password");
                         else
                         {
-                            string password = Interaction.InputBox("Please try again and enter a new password:", "Changing Password");
+                            string password = CreateInteractionForm("Please try again and enter a new password:", "CAPCKET login error · changing password");
                             SendAesEncryptedMessage(PasswordResponse + "#" + password + "#" + password.Length);
                         }
                     }
@@ -241,7 +241,8 @@ namespace SnifferClient
 
             if (SignInButton.Text.Equals("Sign In") && !captchaCode.Equals(textBoxCaptcha.Text.ToUpper()))
             {
-                MessageBox.Show("please try again the captcha, the code was " + captchaCode);
+                MessageBox.Show("Wrong captcha pattern\nPlease try again", "CAPCKET login error");
+                textBoxCaptcha.Text = "";
                 captchaCode = RandomString(6);
                 pictureBoxCaptcha.Image = captcha.ProcessRequest(captchaCode);
             }
@@ -266,7 +267,7 @@ namespace SnifferClient
         private void linkLabelInfo_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
 
-            if (linkLabelInfo.Text.Equals("Don't have an account? Sign up here!"))
+            if (linkLabelInfo.Text.Equals("Sign up here!"))
                 this.Invoke(new Action(() => ChangeToSignUp()));
 
             else
@@ -282,8 +283,10 @@ namespace SnifferClient
         private void ChangeToSignUp()
         {
             SignInButton.Text = "Sign Up";
-            linkLabelInfo.Text = "Already have a account? Sign in here!";
-            labelQA.Visible = true;
+            linkLabelInfo.Text = "Sign in here!";
+            labelInfo.Text = "Already have a account?";
+            labelQuestion.Visible = true;
+            labelAnswer.Visible = true;
             comboBoxQuestions.Visible = true;
             textBoxAnswer.Visible = true;
             textBoxEmail.Visible = true;
@@ -299,8 +302,10 @@ namespace SnifferClient
         private void ChangeToSignIn()
         {
             SignInButton.Text = "Sign In";
-            linkLabelInfo.Text = "Don't have an account? Sign up here!";
-            labelQA.Visible = false;
+            linkLabelInfo.Text = "Sign up here!";
+            labelInfo.Text = "Don't have an account?";
+            labelQuestion.Visible = false;
+            labelAnswer.Visible = false;
             comboBoxQuestions.Visible = false;
             textBoxAnswer.Visible = false;
             textBoxEmail.Visible = false;
@@ -320,7 +325,7 @@ namespace SnifferClient
         /// <param name="e"></param>
         private void linkLabelForgotPass_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            string username = Interaction.InputBox("Please enter your username:", "Changing Password");
+            string username = CreateInteractionForm("Please enter your username:", "CAPCKET changing password");
             SendAesEncryptedMessage(QuestionRequest + "#" + username + "#" + username.Length);
         }
 
@@ -413,6 +418,25 @@ namespace SnifferClient
             Debug.WriteLine(BytesToString(byteArray));
             return byteArray;
 
+        }
+
+        /// <summary>
+        /// creates a new form to allow the user to answer a question
+        /// </summary>
+        /// <param name="requierd">string that indicates what the user should write</param>
+        /// <param name="title">string to show as title in the form</param>
+        /// <returns>user's answer</returns>
+        public string CreateInteractionForm(string requierd, string title)
+        {
+            InteractionForm iForm = new InteractionForm(requierd, title);
+            DialogResult dr = iForm.ShowDialog();
+            string result = "";
+            if (dr == DialogResult.OK)
+            {
+                result = iForm.text;
+            }
+            iForm.Dispose();
+            return result;
         }
     }
 }
