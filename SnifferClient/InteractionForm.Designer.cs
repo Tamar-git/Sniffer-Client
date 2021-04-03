@@ -40,7 +40,7 @@
             // 
             this.commandLabel.AutoSize = true;
             this.commandLabel.Font = new System.Drawing.Font("Narkisim", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(177)));
-            this.commandLabel.Location = new System.Drawing.Point(32, 22);
+            this.commandLabel.Location = new System.Drawing.Point(9, 15);
             this.commandLabel.Name = "commandLabel";
             this.commandLabel.Size = new System.Drawing.Size(38, 14);
             this.commandLabel.TabIndex = 0;
@@ -49,7 +49,7 @@
             // commandTextBox
             // 
             this.commandTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(177)));
-            this.commandTextBox.Location = new System.Drawing.Point(35, 46);
+            this.commandTextBox.Location = new System.Drawing.Point(12, 39);
             this.commandTextBox.Name = "commandTextBox";
             this.commandTextBox.Size = new System.Drawing.Size(169, 21);
             this.commandTextBox.TabIndex = 1;
@@ -57,7 +57,7 @@
             // button1
             // 
             this.button1.Font = new System.Drawing.Font("Narkisim", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(177)));
-            this.button1.Location = new System.Drawing.Point(241, 107);
+            this.button1.Location = new System.Drawing.Point(270, 107);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 2;
@@ -79,7 +79,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(328, 142);
+            this.ClientSize = new System.Drawing.Size(357, 142);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.commandTextBox);
