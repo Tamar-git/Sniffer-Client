@@ -1,11 +1,12 @@
 ﻿using System;
-using System.Web;
 using System.Drawing;
-using System.IO;
 using System.Drawing.Imaging;
 using System.Drawing.Text;
 using System.Drawing.Drawing2D;
 
+/// <summary>
+/// class that is responsible for creating a captcha pattern
+/// </summary>
 public class Captcha
 {
     /// <summary>

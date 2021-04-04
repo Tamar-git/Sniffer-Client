@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace SnifferClient
 {
+    /// <summary>
+    /// form class that displays a packet's body
+    /// </summary>
     public partial class DataViewForm : Form
     {
         private ListViewItem packetItem; // stores the chosen packet data
@@ -22,7 +18,6 @@ namespace SnifferClient
         {
             InitializeComponent();
             packetItem = item;
-
         }
 
         /// <summary>

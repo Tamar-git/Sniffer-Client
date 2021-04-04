@@ -1,20 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using System.Net;
-using System.Net.Sockets;
 using PacketDotNet;
-using PacketDotNet.Utils;
 using SharpPcap;
-using System.IO;
 using System.Diagnostics;
-using System.Net.Http;
-using static System.Net.WebRequestMethods;
 
 namespace SnifferClient
 {
+    /// <summary>
+    /// class that analyzes a raw packet
+    /// </summary>
     class PacketAnalyzer
     {
         /// <summary>
@@ -93,7 +88,6 @@ namespace SnifferClient
                 return info;
             }
         }
-
 
         /// <summary>
         /// checks the packet's protocol

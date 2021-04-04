@@ -1,22 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Net.Mail;
 using System.Net.Sockets;
-using System.Security.Cryptography;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using Microsoft.VisualBasic;
-using SnifferServer;
 using System.Diagnostics;
 
 namespace SnifferClient
 {
+    /// <summary>
+    /// form class that handles the login process
+    /// responsible for the connection with the server
+    /// </summary>
     public partial class LoginForm : Form
     {
         private int portNo = 500; // stores the port number of the server
@@ -168,7 +161,6 @@ namespace SnifferClient
                         if (text.Equals("ok"))
                         {
                             name = textBoxName.Text;
-                            //MessageBox.Show("valid details");
 
                             OpenSnifferForm();
                             return;
@@ -429,7 +421,7 @@ namespace SnifferClient
         public string CreateInteractionForm(string requierd, string title)
         {
             InteractionForm iForm = new InteractionForm(requierd, title);
-            DialogResult dr = iForm.ShowDialog();
+            DialogResult dr = iForm.ShowDialog(); // allows using the return value of the form
             string result = "";
             if (dr == DialogResult.OK)
             {

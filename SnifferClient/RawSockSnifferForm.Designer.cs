@@ -220,7 +220,6 @@
         private System.Windows.Forms.ColumnHeader SerialNumber;
         private System.Windows.Forms.ColumnHeader ProtocolName;
         private System.Windows.Forms.ColumnHeader Length;
-        private System.Windows.Forms.Label labelChosenPacketData;
         private System.Windows.Forms.ColumnHeader SourceAdd;
         private System.Windows.Forms.ColumnHeader DestinationAdd;
         private System.Windows.Forms.ColumnHeader Checksum;

@@ -1,15 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SnifferClient
 {
+    /// <summary>
+    /// class that is responsible for RSA cryptogtaphy
+    /// </summary>
     class RsaCrypto
     {
-
         private RSACryptoServiceProvider ClientPrivateKey; //client's private key
         public RSACryptoServiceProvider ServerPublicKey; //server's public key
         public string ClientPublicKey; //client's public key
@@ -19,9 +17,6 @@ namespace SnifferClient
         /// </summary>
         public RsaCrypto()
         {
-            //var rsa = new RSACryptoServiceProvider();
-            //_privateKey = rsa.ToXmlString(true);
-            //_clientPublicKey = rsa.ToXmlString(false);
             ClientPrivateKey = new RSACryptoServiceProvider(2048);
             ClientPublicKey = ClientPrivateKey.ToXmlString(false);
         }
@@ -29,18 +24,17 @@ namespace SnifferClient
         /// <summary>
         /// sets the server's public key
         /// </summary>
-        /// <param name="publicKey"></param>
+        /// <param name="publicKey">server's public key</param>
         public void SetServerPublicKey(string publicKey)
         {
             ServerPublicKey = new RSACryptoServiceProvider(2048);
             ServerPublicKey.FromXmlString(publicKey);
-            //_publicKey = publicKey;
         }
 
         /// <summary>
         /// returns the original public key that the client created
         /// </summary>
-        /// <returns></returns>
+        /// <returns>client's public key</returns>
         public string GetClientPublicKey()
         {
             return ClientPublicKey;
@@ -56,20 +50,11 @@ namespace SnifferClient
             try
             {
                 byte[] encryptedData;
-                //RSAParameters RSAKeyInfo = ServerPublicKey.ExportParameters(false);
-                //Create a new instance of RSACryptoServiceProvider. 
-                //using (RSACryptoServiceProvider RSA = new RSACryptoServiceProvider())
-                //{
 
-                //    //Import the RSA Key information. This only needs 
-                //    //toinclude the public key information.
-                //    RSA.ImportParameters(RSAKeyInfo);
-
-                //    //Encrypt the passed byte array and specify OAEP padding.   
-                //    //OAEP padding is only available on Microsoft Windows XP or 
-                //    //later.  
+                //Encrypt the passed byte array and specify OAEP padding.   
+                //OAEP padding is only available on Microsoft Windows XP or 
+                //later.  
                 encryptedData = ServerPublicKey.Encrypt(DataToEncrypt, false);
-                //}
                 return encryptedData;
             }
             //Catch and display a CryptographicException   
@@ -92,19 +77,11 @@ namespace SnifferClient
             try
             {
                 byte[] decryptedData;
-                //RSAParameters RSAKeyInfo = ClientPrivateKey.ExportParameters(false);
-                //Create a new instance of RSACryptoServiceProvider. 
-                //using (RSACryptoServiceProvider RSA = new RSACryptoServiceProvider())
-                //{
-                //    //Import the RSA Key information. This needs 
-                //    //to include the private key information.
-                //    RSA.ImportParameters(RSAKeyInfo);
 
-                //    //Decrypt the passed byte array and specify OAEP padding.   
-                //    //OAEP padding is only available on Microsoft Windows XP or 
-                //    //later.  
+                //Decrypt the passed byte array and specify OAEP padding.   
+                //OAEP padding is only available on Microsoft Windows XP or 
+                //later.  
                 decryptedData = ClientPrivateKey.Decrypt(DataToDecrypt, false);
-                //}
                 return decryptedData;
             }
             //Catch and display a CryptographicException   

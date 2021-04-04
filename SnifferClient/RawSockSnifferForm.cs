@@ -1,27 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.IO;
-using System.Net;
 using System.Net.Sockets;
-using PacketDotNet;
-using PacketDotNet.Utils;
 using SharpPcap;
-using System.Drawing.Drawing2D;
-using System.Xml;
-using System.Threading;
-using System.Runtime.CompilerServices;
 using System.Diagnostics;
-using SnifferServer;
 
 namespace SnifferClient
 {
+    /// <summary>
+    /// form class that captures packets and displays them
+    /// responsible for the connection with the server
+    /// </summary>
     public partial class RawSockSnifferForm : Form
     {
 
@@ -71,7 +61,6 @@ namespace SnifferClient
         {
             base.OnHandleCreated(e);
             this.Invoke(new Action(() => previousSniffComboBox.Items.AddRange(GetLastWeekDates())));
-
         }
 
         /// <summary>
@@ -122,11 +111,13 @@ namespace SnifferClient
         /// <param name="details">info about the log that will arrive</param>
         public void ReceivingLog(string details)
         {
+            //changes in the form
             this.Invoke(new Action(() => statusLabel.Text = "Loading captured packets from " + previousSniffComboBox.SelectedItem.ToString()));
             this.Invoke(new Action(() => startPictureBox.Enabled = false));
             this.Invoke(new Action(() => stopPictureBox.Enabled = false));
             this.Invoke(new Action(() => startPictureBox.Image =Properties.Resources.play_arrow_button_circle_86280_gray));
             this.Invoke(new Action(() => stopPictureBox.Image = Properties.Resources.red_square_gray));
+
             string fileSize = details.Split('/')[0];
             string fileName = details.Split('/')[1];
             int length = Convert.ToInt32(fileSize);
@@ -162,6 +153,7 @@ namespace SnifferClient
                     AddLineToListView(line);
                 }
             }
+            // changes in the form when all the packets were loaded
             this.Invoke(new Action(() => statusLabel.Text = "Displaying captured packets from " + previousSniffComboBox.SelectedItem.ToString()));
             this.Invoke(new Action(() => startPictureBox.Enabled = true));
             this.Invoke(new Action(() => stopPictureBox.Enabled = true));
@@ -309,8 +301,6 @@ namespace SnifferClient
             device.Open(DeviceMode.Promiscuous, 1500);  // 1.5 sec timeout
             device.StartCapture();
 
-            //MessageBox.Show("Listening for packets....");
-
         }
 
         /// <summary>
@@ -372,7 +362,6 @@ namespace SnifferClient
 
             string messageToSend = packetDetailsResponse + "#" + allData + "#" + allData.Length;
             SendAesEncryptedMessage(messageToSend);
-
         }
 
         /// <summary>
@@ -418,7 +407,6 @@ namespace SnifferClient
                 counter = 0;
             }
         }
-
 
         /// <summary>
         /// gets the dates of the last week in the form of dd/MM/yyyy

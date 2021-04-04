@@ -1,21 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace SnifferClient
 {
+    /// <summary>
+    /// form class that gets information from the user
+    /// </summary>
     public partial class InteractionForm : Form
     {
         /// <summary>
         /// string that restores the user's answer
         /// </summary>
         public string text { get; set; }
+
         /// <summary>
         /// constructor that creates the new form
         /// </summary>

@@ -1,13 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace SnifferServer
+namespace SnifferClient
 {
+    /// <summary>
+    /// class that is responsible for AES cryptogtaphy
+    /// </summary>
     public class AesCrypto
     {
         private Aes aes; // Represents the abstract base class
@@ -107,7 +106,6 @@ namespace SnifferServer
                 // Declare the string used to hold
                 // the decrypted text.
                 string plaintext = null;
-
 
                 // Create an Aes object
                 // with the specified key and IV.
