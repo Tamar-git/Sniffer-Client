@@ -3,6 +3,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Windows.Forms;
 using System.Diagnostics;
+using System.Security.Cryptography;
 
 namespace SnifferClient
 {
@@ -189,7 +190,10 @@ namespace SnifferClient
                     else if (requestNumber == PasswordRequest)
                     {
                         string password = CreateInteractionForm("Please enter a new password:", "CAPCKET changing password");
-                        SendAesEncryptedMessage(PasswordResponse + "#" + password + "#" + password.Length);
+                        // hash password
+                        string hashpassword = HashString(password);
+                        Debug.WriteLine("hash length: " + hashpassword.Length);
+                        SendAesEncryptedMessage(PasswordResponse + "#" + hashpassword + "#" + password.Length);
                     }
                     else if (requestNumber == PasswordChangeStatusResponse)
                     {
@@ -229,7 +233,10 @@ namespace SnifferClient
 
             string name = textBoxName.Text;
             string password = textBoxPassword.Text;
-            string toSend = name + "/" + password;
+            // hash password
+            string hashpassword = HashString(password);
+            Debug.WriteLine("hash length: " + hashpassword.Length);
+            string toSend = name + "/" + hashpassword;
 
             if (SignInButton.Text.Equals("Sign In") && !captchaCode.Equals(textBoxCaptcha.Text.ToUpper()))
             {
@@ -249,6 +256,24 @@ namespace SnifferClient
                 toSend += "/" + textBoxEmail.Text + "/" + comboBoxQuestions.SelectedItem.ToString() + "/" + textBoxAnswer.Text;
                 SendAesEncryptedMessage(signUpRequest + "#" + toSend + "#" + toSend.Length);
             }
+        }
+
+        /// <summary>
+        /// using hash function to encrypt a string
+        /// </summary>
+        /// <param name="text">string to hash</param>
+        /// <returns>hashed text</returns>
+        private static string HashString(string text)
+        {
+            SHA256 sha256Hash = SHA256.Create();
+            byte[] bytes = sha256Hash.ComputeHash(Encoding.ASCII.GetBytes(text));
+
+            StringBuilder builder = new StringBuilder();
+            for (int i = 0; i < bytes.Length; i++)
+            {
+                builder.Append(bytes[i].ToString("x2"));
+            }
+            return builder.ToString();
         }
 
         /// <summary>
