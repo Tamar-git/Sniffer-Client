@@ -4,6 +4,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.Security.Cryptography;
+using System.Runtime.InteropServices.WindowsRuntime;
 
 namespace SnifferClient
 {
@@ -252,10 +253,45 @@ namespace SnifferClient
             }
             else // sign up
             {
-                Debug.WriteLine("signing up?");
-                toSend += "/" + textBoxEmail.Text + "/" + comboBoxQuestions.SelectedItem.ToString() + "/" + textBoxAnswer.Text;
-                SendAesEncryptedMessage(signUpRequest + "#" + toSend + "#" + toSend.Length);
+                if (!IsPasswordValid(password)) //checking password validity 
+                {
+                    //password isn't valid.
+                    MessageBox.Show("The pasword isn't valid. Please try again.\nIt should be 6-8 charcters and contain both digits and letters.", "CAPCKET Sign Up");
+                }
+                else
+                {
+                    Debug.WriteLine("signing up?");
+                    toSend += "/" + textBoxEmail.Text + "/" + comboBoxQuestions.SelectedItem.ToString() + "/" + textBoxAnswer.Text;
+                    SendAesEncryptedMessage(signUpRequest + "#" + toSend + "#" + toSend.Length);
+                }
             }
+        }
+
+        private static bool IsPasswordValid(string password)
+        {
+            int length = password.Length;
+            bool lengthValidity = length < 9 && length > 5;
+            return (lengthValidity && IsExistDigit(password) && IsExistLetter(password));
+        }
+
+        private static bool IsExistDigit(string password)
+        {
+            foreach (char c in password)
+            {
+                if (Char.IsDigit(c))
+                    return true;
+            }
+            return false;
+        }
+
+        private static bool IsExistLetter(string password)
+        {
+            foreach (char c in password)
+            {
+                if (Char.IsLetter(c))
+                    return true;
+            }
+            return false;
         }
 
         /// <summary>

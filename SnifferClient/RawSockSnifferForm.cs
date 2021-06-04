@@ -18,6 +18,7 @@ namespace SnifferClient
         ICaptureDevice device = null; // stores the capture device
         PacketAnalyzer pA; // object that analyzes a packet
         int counter = 0; // stores the packet's serial number
+        List<List<string>> currentLocalPackets; // stores list view items
         TcpClient client; // client Socket
 
         AesCrypto aes; // AES object for encryption and decryption
