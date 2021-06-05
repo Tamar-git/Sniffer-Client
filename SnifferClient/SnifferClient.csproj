@@ -148,6 +148,7 @@
     <None Include="Resources\red square gray1.png" />
     <None Include="Resources\play-arrow-button-circle-86280 gray.png" />
     <None Include="Resources\Filter.png" />
+    <None Include="Resources\Filter gray.png" />
     <Content Include="Resources\play-arrow-button-circle-86280_gray.png" />
     <Content Include="Resources\red square gray.png" />
   </ItemGroup>

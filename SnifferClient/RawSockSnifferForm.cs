@@ -120,8 +120,10 @@ namespace SnifferClient
             this.Invoke(new Action(() => statusLabel.Text = "Loading captured packets from " + previousSniffComboBox.SelectedItem.ToString()));
             this.Invoke(new Action(() => startPictureBox.Enabled = false));
             this.Invoke(new Action(() => stopPictureBox.Enabled = false));
+            this.Invoke(new Action(() => pictureBoxFilter.Enabled = false));
             this.Invoke(new Action(() => startPictureBox.Image = Properties.Resources.play_arrow_button_circle_86280_gray));
             this.Invoke(new Action(() => stopPictureBox.Image = Properties.Resources.red_square_gray));
+            this.Invoke(new Action(() => pictureBoxFilter.Image = Properties.Resources.Filter_gray));
 
             string fileSize = details.Split('/')[0];
             string fileName = details.Split('/')[1];
@@ -163,8 +165,10 @@ namespace SnifferClient
             this.Invoke(new Action(() => statusLabel.Text = "Displaying captured packets from " + previousSniffComboBox.SelectedItem.ToString()));
             this.Invoke(new Action(() => startPictureBox.Enabled = true));
             this.Invoke(new Action(() => stopPictureBox.Enabled = true));
+            this.Invoke(new Action(() => pictureBoxFilter.Enabled = true));
             this.Invoke(new Action(() => startPictureBox.Image = Properties.Resources.play_arrow_button_circle_86280));
             this.Invoke(new Action(() => stopPictureBox.Image = Properties.Resources.red_square));
+            this.Invoke(new Action(() => pictureBoxFilter.Image = Properties.Resources.Filter));
             Debug.WriteLine(messageReceived);
 
         }
@@ -422,6 +426,8 @@ namespace SnifferClient
             {
                 device.OnPacketArrival -= new PacketArrivalEventHandler(device_OnPacketArrival);
                 this.Invoke(new Action(() => requestButton.Enabled = true));
+                this.Invoke(new Action(() => pictureBoxFilter.Enabled = true));
+                this.Invoke(new Action(() => pictureBoxFilter.Image = Properties.Resources.Filter));
                 this.Invoke(new Action(() => statusLabel.Text = "Capturing stopped\nDisplaying recently captured packets"));
                 counter = 0;
             }
@@ -469,8 +475,10 @@ namespace SnifferClient
             currentLocalPackets.Clear();
             findDevices();
             startPacketListener();
-            // while sniffing requesting logs isnt optional
+            // while sniffing requesting logs and filtering isnt optional
             this.Invoke(new Action(() => requestButton.Enabled = false));
+            this.Invoke(new Action(() => pictureBoxFilter.Enabled = false));
+            this.Invoke(new Action(() => pictureBoxFilter.Image = Properties.Resources.Filter_gray));
             this.Invoke(new Action(() => statusLabel.Text = "Capturing packets"));
         }
 

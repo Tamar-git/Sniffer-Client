@@ -93,6 +93,16 @@ namespace SnifferClient.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Filter_gray {
+            get {
+                object obj = ResourceManager.GetObject("Filter gray", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap play_arrow_button_circle_86280 {
             get {
                 object obj = ResourceManager.GetObject("play-arrow-button-circle-86280", resourceCulture);
