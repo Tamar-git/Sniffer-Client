@@ -44,14 +44,17 @@
             this.statusLabel = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.stopToolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.stopPictureBox = new System.Windows.Forms.PictureBox();
             this.startToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.startPictureBox = new System.Windows.Forms.PictureBox();
-            this.stopPictureBox = new System.Windows.Forms.PictureBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.pictureBoxFilter = new System.Windows.Forms.PictureBox();
+            this.toolTipFilter = new System.Windows.Forms.ToolTip(this.components);
             ArrivalTime = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            ((System.ComponentModel.ISupportInitialize)(this.startPictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.stopPictureBox)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.startPictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxFilter)).BeginInit();
             this.SuspendLayout();
             // 
             // ArrivalTime
@@ -155,18 +158,6 @@
             this.label1.TabIndex = 14;
             this.label1.Text = "Status:";
             // 
-            // startPictureBox
-            // 
-            this.startPictureBox.Image = global::SnifferClient.Properties.Resources.play_arrow_button_circle_86280;
-            this.startPictureBox.Location = new System.Drawing.Point(23, 12);
-            this.startPictureBox.Name = "startPictureBox";
-            this.startPictureBox.Size = new System.Drawing.Size(100, 50);
-            this.startPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.startPictureBox.TabIndex = 12;
-            this.startPictureBox.TabStop = false;
-            this.startToolTip.SetToolTip(this.startPictureBox, "start capturing packets");
-            this.startPictureBox.Click += new System.EventHandler(this.startPictureBox_Click);
-            // 
             // stopPictureBox
             // 
             this.stopPictureBox.Image = global::SnifferClient.Properties.Resources.red_square;
@@ -179,21 +170,46 @@
             this.stopToolTip.SetToolTip(this.stopPictureBox, "stop capturing packets");
             this.stopPictureBox.Click += new System.EventHandler(this.stopPictureBox_Click);
             // 
+            // startPictureBox
+            // 
+            this.startPictureBox.Image = global::SnifferClient.Properties.Resources.play_arrow_button_circle_86280;
+            this.startPictureBox.Location = new System.Drawing.Point(23, 12);
+            this.startPictureBox.Name = "startPictureBox";
+            this.startPictureBox.Size = new System.Drawing.Size(100, 50);
+            this.startPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.startPictureBox.TabIndex = 12;
+            this.startPictureBox.TabStop = false;
+            this.startToolTip.SetToolTip(this.startPictureBox, "start capturing packets");
+            this.startPictureBox.Click += new System.EventHandler(this.StartPictureBox_Click);
+            // 
             // pictureBox1
             // 
             this.pictureBox1.Image = global::SnifferClient.Properties.Resources.CAPCKET_logo_red_cut_removebg_preview;
-            this.pictureBox1.Location = new System.Drawing.Point(647, 6);
+            this.pictureBox1.Location = new System.Drawing.Point(683, 6);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(100, 50);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox1.TabIndex = 15;
             this.pictureBox1.TabStop = false;
             // 
+            // pictureBoxFilter
+            // 
+            this.pictureBoxFilter.Image = global::SnifferClient.Properties.Resources.Filter;
+            this.pictureBoxFilter.Location = new System.Drawing.Point(600, 12);
+            this.pictureBoxFilter.Name = "pictureBoxFilter";
+            this.pictureBoxFilter.Size = new System.Drawing.Size(77, 41);
+            this.pictureBoxFilter.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBoxFilter.TabIndex = 16;
+            this.pictureBoxFilter.TabStop = false;
+            this.toolTipFilter.SetToolTip(this.pictureBoxFilter, "choose filters for captured packets");
+            this.pictureBoxFilter.Click += new System.EventHandler(this.PictureBoxFilter_Click);
+            // 
             // RawSockSnifferForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1057, 553);
+            this.Controls.Add(this.pictureBoxFilter);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.statusLabel);
@@ -207,9 +223,10 @@
             this.Name = "RawSockSnifferForm";
             this.Text = "CAPCKET";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.RawSockSnifferForm_FormClosed);
-            ((System.ComponentModel.ISupportInitialize)(this.startPictureBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.stopPictureBox)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.startPictureBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxFilter)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -233,5 +250,7 @@
         private System.Windows.Forms.ToolTip stopToolTip;
         private System.Windows.Forms.ToolTip startToolTip;
         private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.PictureBox pictureBoxFilter;
+        private System.Windows.Forms.ToolTip toolTipFilter;
     }
 }

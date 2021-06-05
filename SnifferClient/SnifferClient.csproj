@@ -64,6 +64,12 @@
     <Compile Include="DataViewForm.Designer.cs">
       <DependentUpon>DataViewForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="FilterForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FilterForm.Designer.cs">
+      <DependentUpon>FilterForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="InteractionForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -88,6 +94,9 @@
     <Compile Include="RsaCrypto.cs" />
     <EmbeddedResource Include="DataViewForm.resx">
       <DependentUpon>DataViewForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FilterForm.resx">
+      <DependentUpon>FilterForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="InteractionForm.resx">
       <DependentUpon>InteractionForm.cs</DependentUpon>
@@ -138,6 +147,7 @@
     <None Include="Resources\CAPCKET_logo_cut-removebg-preview.png" />
     <None Include="Resources\red square gray1.png" />
     <None Include="Resources\play-arrow-button-circle-86280 gray.png" />
+    <None Include="Resources\Filter.png" />
     <Content Include="Resources\play-arrow-button-circle-86280_gray.png" />
     <Content Include="Resources\red square gray.png" />
   </ItemGroup>

@@ -18,7 +18,8 @@ namespace SnifferClient
         ICaptureDevice device = null; // stores the capture device
         PacketAnalyzer pA; // object that analyzes a packet
         int counter = 0; // stores the packet's serial number
-        List<List<string>> currentLocalPackets; // stores list view items
+        List<string[]> currentLocalPackets; // stores list view items
+        List<byte[]> currentLocalPacketsTag; // stores list view tags
         TcpClient client; // client Socket
 
         AesCrypto aes; // AES object for encryption and decryption
@@ -41,6 +42,9 @@ namespace SnifferClient
             pA = new PacketAnalyzer();
             this.client = client;
             this.aes = aes;
+            currentLocalPackets = new List<string[]>();
+            currentLocalPacketsTag = new List<byte[]>();
+
             // Read data from the client async
             data = new byte[client.ReceiveBufferSize];
 
@@ -116,7 +120,7 @@ namespace SnifferClient
             this.Invoke(new Action(() => statusLabel.Text = "Loading captured packets from " + previousSniffComboBox.SelectedItem.ToString()));
             this.Invoke(new Action(() => startPictureBox.Enabled = false));
             this.Invoke(new Action(() => stopPictureBox.Enabled = false));
-            this.Invoke(new Action(() => startPictureBox.Image =Properties.Resources.play_arrow_button_circle_86280_gray));
+            this.Invoke(new Action(() => startPictureBox.Image = Properties.Resources.play_arrow_button_circle_86280_gray));
             this.Invoke(new Action(() => stopPictureBox.Image = Properties.Resources.red_square_gray));
 
             string fileSize = details.Split('/')[0];
@@ -142,6 +146,7 @@ namespace SnifferClient
             }
             // clears the existing items in the list view
             this.Invoke(new Action(() => listView1.Items.Clear()));
+            currentLocalPackets.Clear();
             string messageReceived = System.Text.Encoding.ASCII.GetString(buffer, 0, received);
             List<string> listOfPacketsData = messageReceived.Split('\n').ToList();
             for (int i = 0; i < listOfPacketsData.Count; i++) // presents every packet as a line in the form's list view
@@ -151,7 +156,7 @@ namespace SnifferClient
                     // adds the counter field to the string
                     listOfPacketsData[i] = (i + 1) + "," + listOfPacketsData[i];
                     string[] line = listOfPacketsData[i].Split(',');
-                    AddLineToListView(line);
+                    AddLineToListViewFromLog(line);
                 }
             }
             // changes in the form when all the packets were loaded
@@ -168,12 +173,13 @@ namespace SnifferClient
         /// adds an array to the list view in the form
         /// </summary>
         /// <param name="detailsToAdd">array of strings with the packet's data</param>
-        public void AddLineToListView(string[] detailsToAdd)
+        public void AddLineToListViewFromLog(string[] detailsToAdd)
         {
             ListViewItem item = new ListViewItem(detailsToAdd);
             byte[] dataToTag = HexToBytes(detailsToAdd[detailsToAdd.Length - 1]);
             item.Tag = dataToTag;
-
+            currentLocalPackets.Add(detailsToAdd);
+            currentLocalPacketsTag.Add(dataToTag);
             this.Invoke(new Action(() => listView1.Items.Add(item)));
         }
 
@@ -268,12 +274,10 @@ namespace SnifferClient
                     counter++;
                     dataList[0] = counter.ToString();
 
-                    ListViewItem item = new ListViewItem(dataList.ToArray());
-                    item.Tag = dataToTag;
-
-                    this.Invoke(new Action(() => listView1.Items.Add(item)));
+                    AddLineAndTagToListView(dataList.ToArray(), dataToTag);
+                    currentLocalPackets.Add(dataList.ToArray());
+                    currentLocalPacketsTag.Add(dataToTag);
                     SendPacketDataToServer(dataList, dataToTag);
-
                 }
 
             }
@@ -283,6 +287,20 @@ namespace SnifferClient
             }
 
         }
+
+        /// <summary>
+        /// adds a packet to the list view
+        /// </summary>
+        /// <param name="dataList">array of strings with the packet's data</param>
+        /// <param name="dataToTag">array of bytes with the packet's body</param>
+        public void AddLineAndTagToListView(string[] dataList, byte[] dataToTag)
+        {
+            ListViewItem item = new ListViewItem(dataList.ToArray());
+            item.Tag = dataToTag;
+
+            this.Invoke(new Action(() => listView1.Items.Add(item)));
+        }
+
 
         /// <summary>
         /// start listening for arriving packets 
@@ -444,10 +462,11 @@ namespace SnifferClient
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void startPictureBox_Click(object sender, EventArgs e)
+        private void StartPictureBox_Click(object sender, EventArgs e)
         {
             // clears the existing items in the list view
             this.Invoke(new Action(() => listView1.Items.Clear()));
+            currentLocalPackets.Clear();
             findDevices();
             startPacketListener();
             // while sniffing requesting logs isnt optional
@@ -455,5 +474,96 @@ namespace SnifferClient
             this.Invoke(new Action(() => statusLabel.Text = "Capturing packets"));
         }
 
+        private void PictureBoxFilter_Click(object sender, EventArgs e)
+        {
+            List<string> addresses, protocols;
+            CreateFilterForm(out addresses, out protocols); // gets the requiered filters from the user
+            FilterCurrentPackets(addresses, protocols);
+
+        }
+
+        /// <summary>
+        /// creates a new form to allow the user to answer a question
+        /// </summary>
+        /// <returns>user's answer</returns>
+        public void CreateFilterForm(out List<string> addresses, out List<string> protocols)
+        {
+            FilterForm fForm = new FilterForm();
+            DialogResult dr = fForm.ShowDialog();
+            Debug.WriteLine("after filter show dialog");
+            //this.Invoke(new Action(() => dr = fForm.ShowDialog())); // allows using the return value of the form
+            addresses = new List<string>();
+            protocols = new List<string>();
+            Debug.WriteLine("before if");
+            if (dr == DialogResult.OK)
+            {
+                protocols.AddRange(fForm.selectedProtocols);
+                addresses.AddRange(fForm.selectedAddresses);
+            }
+            fForm.Dispose();
+        }
+
+        public void FilterCurrentPackets(List<string> addresses, List<string> protocols)
+        {
+            // clears the existing items in the list view
+            this.Invoke(new Action(() => listView1.Items.Clear()));
+
+            for (int i = 0; i < currentLocalPackets.Count; i++)
+            {
+                string[] currentPacket = currentLocalPackets[i];
+                byte[] currentTag = currentLocalPacketsTag[i];
+                if (IsProtocolSuitable(currentPacket, protocols) && IsAddressSuitable(currentPacket, addresses))
+                {
+                    // if the packet suits the filters, its added to the list view
+                    AddLineAndTagToListView(currentPacket, currentTag);
+                }
+            }
+        }
+
+        /// <summary>
+        /// checks whether a packet is from a requiered protocol 
+        /// </summary>
+        /// <param name="packet">packet's detatils</param>
+        /// <param name="protocols">requiered protocols for filtering</param>
+        /// <returns>boolean that indicates whether a packet is from the requiered protocol</returns>
+        public static bool IsProtocolSuitable(string[] packet, List<string> protocols)
+        {
+            string packetProtocol = packet[1];
+            foreach (string protocol in protocols)
+            {
+                if (packetProtocol.Equals(protocol))
+                    return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// checks whether a packet got the requiered source and destination addresses
+        /// </summary>
+        /// <param name="packet">packet's detatils</param>
+        /// <param name="addresses">equiered addresses for filtering</param>
+        /// <returns>boolean that indicates whether a packet got the requiered addresses</returns>
+        public static bool IsAddressSuitable(string[] packet, List<string> addresses)
+        {
+            string[] source = packet[4].Split(' ');
+            string[] destination = packet[5].Split(' ');
+            if (!source[0].Equals(addresses[0]) && !addresses[0].Equals("")) // source ip was chosen and it isn't suitable
+            {
+                return false;
+            }
+            else if (!destination[0].Equals(addresses[1]) && !addresses[1].Equals("")) // destination ip was chosen and it isn't suitable
+            {
+                return false;
+            }
+            else if (!source[1].Equals(addresses[2]) && !addresses[2].Equals("")) // source port was chosen and it isn't suitable
+            {
+                return false;
+            }
+            else if (!destination[1].Equals(addresses[3]) && !addresses[3].Equals("")) // destination port was chosen and it isn't suitable
+            {
+                return false;
+            }
+            return true;
+        }
     }
 }

@@ -424,11 +424,14 @@ namespace SnifferClient
         {
             // hides the last form
             this.Invoke(new Action(() => this.Hide()));
+            Debug.WriteLine("after hiding");
             name = textBoxName.Text;
             // opens a new menu form that gets the tcp client
             RawSockSnifferForm sniffer = new RawSockSnifferForm(client, aes);
             this.Invoke(new Action(() => sniffer.ShowDialog()));
+            Debug.WriteLine("after show sniffer dialog");
             this.Invoke(new Action(() => this.Close()));
+            Debug.WriteLine("after closing login");
             return;
         }
 
