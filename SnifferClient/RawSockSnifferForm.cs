@@ -117,13 +117,14 @@ namespace SnifferClient
         public void ReceivingLog(string details)
         {
             //changes in the form
-            this.Invoke(new Action(() => statusLabel.Text = "Loading captured packets from " + previousSniffComboBox.SelectedItem.ToString()));
+            this.Invoke(new Action(() => labelStatus.Text = "Loading captured packets from " + previousSniffComboBox.SelectedItem.ToString()));
             this.Invoke(new Action(() => startPictureBox.Enabled = false));
             this.Invoke(new Action(() => stopPictureBox.Enabled = false));
             this.Invoke(new Action(() => pictureBoxFilter.Enabled = false));
             this.Invoke(new Action(() => startPictureBox.Image = Properties.Resources.play_arrow_button_circle_86280_gray));
             this.Invoke(new Action(() => stopPictureBox.Image = Properties.Resources.red_square_gray));
             this.Invoke(new Action(() => pictureBoxFilter.Image = Properties.Resources.Filter_gray));
+            this.Invoke(new Action(() => labelFilterRequests.Text = ""));
 
             string fileSize = details.Split('/')[0];
             string fileName = details.Split('/')[1];
@@ -162,7 +163,7 @@ namespace SnifferClient
                 }
             }
             // changes in the form when all the packets were loaded
-            this.Invoke(new Action(() => statusLabel.Text = "Displaying captured packets from " + previousSniffComboBox.SelectedItem.ToString()));
+            this.Invoke(new Action(() => labelStatus.Text = "Displaying captured packets from " + previousSniffComboBox.SelectedItem.ToString()));
             this.Invoke(new Action(() => startPictureBox.Enabled = true));
             this.Invoke(new Action(() => stopPictureBox.Enabled = true));
             this.Invoke(new Action(() => pictureBoxFilter.Enabled = true));
@@ -305,7 +306,6 @@ namespace SnifferClient
             this.Invoke(new Action(() => listView1.Items.Add(item)));
         }
 
-
         /// <summary>
         /// start listening for arriving packets 
         /// </summary>
@@ -428,7 +428,7 @@ namespace SnifferClient
                 this.Invoke(new Action(() => requestButton.Enabled = true));
                 this.Invoke(new Action(() => pictureBoxFilter.Enabled = true));
                 this.Invoke(new Action(() => pictureBoxFilter.Image = Properties.Resources.Filter));
-                this.Invoke(new Action(() => statusLabel.Text = "Capturing stopped\nDisplaying recently captured packets"));
+                this.Invoke(new Action(() => labelStatus.Text = "Capturing stopped\nDisplaying recently captured packets"));
                 counter = 0;
             }
         }
@@ -479,15 +479,25 @@ namespace SnifferClient
             this.Invoke(new Action(() => requestButton.Enabled = false));
             this.Invoke(new Action(() => pictureBoxFilter.Enabled = false));
             this.Invoke(new Action(() => pictureBoxFilter.Image = Properties.Resources.Filter_gray));
-            this.Invoke(new Action(() => statusLabel.Text = "Capturing packets"));
+            this.Invoke(new Action(() => labelStatus.Text = "Capturing packets"));
+            this.Invoke(new Action(() => labelFilterRequests.Text = ""));
         }
 
+        /// <summary>
+        /// when the filter button is clicked, lets the user choose filters and filters the displayed packets
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void PictureBoxFilter_Click(object sender, EventArgs e)
         {
             List<string> addresses, protocols;
             CreateFilterForm(out addresses, out protocols); // gets the requiered filters from the user
             FilterCurrentPackets(addresses, protocols);
-
+            string chosenFilters = GetRequestedFiltersString(addresses, protocols);
+            if (!chosenFilters.Equals(""))
+            {
+                this.Invoke(new Action(() => labelFilterRequests.Text = "(" + chosenFilters + ")"));
+            }
         }
 
         /// <summary>
@@ -497,9 +507,8 @@ namespace SnifferClient
         public void CreateFilterForm(out List<string> addresses, out List<string> protocols)
         {
             FilterForm fForm = new FilterForm();
-            DialogResult dr = fForm.ShowDialog();
+            DialogResult dr = fForm.ShowDialog(); // allows using the return value of the form
             Debug.WriteLine("after filter show dialog");
-            //this.Invoke(new Action(() => dr = fForm.ShowDialog())); // allows using the return value of the form
             addresses = new List<string>();
             protocols = new List<string>();
             Debug.WriteLine("before if");
@@ -511,6 +520,11 @@ namespace SnifferClient
             fForm.Dispose();
         }
 
+        /// <summary>
+        /// filters the currently displayed packets according to the chosen filters
+        /// </summary>
+        /// <param name="addresses">list of requested addresses for filtering</param>
+        /// <param name="protocols">list of requested protocols for filtering</param>
         public void FilterCurrentPackets(List<string> addresses, List<string> protocols)
         {
             // clears the existing items in the list view
@@ -520,10 +534,13 @@ namespace SnifferClient
             {
                 string[] currentPacket = currentLocalPackets[i];
                 byte[] currentTag = currentLocalPacketsTag[i];
+                Debug.WriteLine("cheking if packet " + (i+1) + " is suitable");
                 if (IsProtocolSuitable(currentPacket, protocols) && IsAddressSuitable(currentPacket, addresses))
                 {
+                    Debug.WriteLine("packet " + (i+1) + " is suitable");
                     // if the packet suits the filters, its added to the list view
                     AddLineAndTagToListView(currentPacket, currentTag);
+                    Debug.WriteLine("packet " + (i + 1) + " was added");
                 }
             }
         }
@@ -572,6 +589,39 @@ namespace SnifferClient
                 return false;
             }
             return true;
+        }
+
+        /// <summary>
+        /// creates a string to describe the requiered filters
+        /// </summary>
+        /// <param name="addresses">list of requested addresses for filtering</param>
+        /// <param name="protocols">list of requested protocols for filtering</param>
+        /// <returns>description of the requiered filters</returns>
+        public static string GetRequestedFiltersString(List<string> addresses, List<string> protocols)
+        {
+            string result = "";
+            foreach (string protocol in protocols)
+            {
+                result += protocol + ", ";
+            }
+            for (int i = 0; i < addresses.Count; i++)
+            {
+                if (!addresses[i].Equals("")) // the address was chosen
+                {
+                    string toAdd = "";
+                    switch (i)
+                    {
+                        case 0: toAdd = "Source IP: "; break;
+                        case 1: toAdd = "Destination IP: "; break;
+                        case 2: toAdd = "Source Port: "; break;
+                        case 3: toAdd = "Destination Port: "; break;
+                    }
+                    result += toAdd + addresses[i] + ", ";
+                }
+            }
+            if (!result.Equals(""))
+                result = result.Substring(0, result.Length - 2);
+            return result;
         }
     }
 }

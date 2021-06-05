@@ -41,20 +41,21 @@
             this.previousSniffComboBox = new System.Windows.Forms.ComboBox();
             this.chooseDateLabel = new System.Windows.Forms.Label();
             this.requestButton = new System.Windows.Forms.Button();
-            this.statusLabel = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
+            this.labelStatus = new System.Windows.Forms.Label();
+            this.labelStatusTitle = new System.Windows.Forms.Label();
             this.stopToolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.stopPictureBox = new System.Windows.Forms.PictureBox();
             this.startToolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.startPictureBox = new System.Windows.Forms.PictureBox();
             this.toolTipFilter = new System.Windows.Forms.ToolTip(this.components);
             this.pictureBoxFilter = new System.Windows.Forms.PictureBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.startPictureBox = new System.Windows.Forms.PictureBox();
-            this.stopPictureBox = new System.Windows.Forms.PictureBox();
+            this.labelFilterRequests = new System.Windows.Forms.Label();
             ArrivalTime = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            ((System.ComponentModel.ISupportInitialize)(this.stopPictureBox)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.startPictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxFilter)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.startPictureBox)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.stopPictureBox)).BeginInit();
             this.SuspendLayout();
             // 
             // ArrivalTime
@@ -77,7 +78,7 @@
             this.listView1.HideSelection = false;
             this.listView1.Location = new System.Drawing.Point(12, 75);
             this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(1033, 463);
+            this.listView1.Size = new System.Drawing.Size(1039, 463);
             this.listView1.TabIndex = 6;
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
@@ -113,7 +114,7 @@
             // previousSniffComboBox
             // 
             this.previousSniffComboBox.FormattingEnabled = true;
-            this.previousSniffComboBox.Location = new System.Drawing.Point(919, 11);
+            this.previousSniffComboBox.Location = new System.Drawing.Point(930, 11);
             this.previousSniffComboBox.Name = "previousSniffComboBox";
             this.previousSniffComboBox.Size = new System.Drawing.Size(121, 21);
             this.previousSniffComboBox.TabIndex = 9;
@@ -121,7 +122,7 @@
             // chooseDateLabel
             // 
             this.chooseDateLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(177)));
-            this.chooseDateLabel.Location = new System.Drawing.Point(789, 13);
+            this.chooseDateLabel.Location = new System.Drawing.Point(806, 13);
             this.chooseDateLabel.Name = "chooseDateLabel";
             this.chooseDateLabel.Size = new System.Drawing.Size(124, 49);
             this.chooseDateLabel.TabIndex = 10;
@@ -130,7 +131,7 @@
             // requestButton
             // 
             this.requestButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(177)));
-            this.requestButton.Location = new System.Drawing.Point(919, 38);
+            this.requestButton.Location = new System.Drawing.Point(930, 38);
             this.requestButton.Name = "requestButton";
             this.requestButton.Size = new System.Drawing.Size(121, 23);
             this.requestButton.TabIndex = 11;
@@ -138,60 +139,25 @@
             this.requestButton.UseVisualStyleBackColor = true;
             this.requestButton.Click += new System.EventHandler(this.requestButton_Click);
             // 
-            // statusLabel
+            // labelStatus
             // 
-            this.statusLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(177)));
-            this.statusLabel.Location = new System.Drawing.Point(249, 28);
-            this.statusLabel.Name = "statusLabel";
-            this.statusLabel.Size = new System.Drawing.Size(362, 41);
-            this.statusLabel.TabIndex = 13;
-            this.statusLabel.Text = "Please start capturing packets or load previously captured packets from a selecte" +
+            this.labelStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(177)));
+            this.labelStatus.Location = new System.Drawing.Point(332, 9);
+            this.labelStatus.Name = "labelStatus";
+            this.labelStatus.Size = new System.Drawing.Size(362, 63);
+            this.labelStatus.TabIndex = 13;
+            this.labelStatus.Text = "Please start capturing packets or load previously captured packets from a selecte" +
     "d date";
             // 
-            // label1
+            // labelStatusTitle
             // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(177)));
-            this.label1.Location = new System.Drawing.Point(235, 6);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(66, 22);
-            this.label1.TabIndex = 14;
-            this.label1.Text = "Status:";
-            // 
-            // pictureBoxFilter
-            // 
-            this.pictureBoxFilter.Enabled = false;
-            this.pictureBoxFilter.Image = global::SnifferClient.Properties.Resources.Filter_gray;
-            this.pictureBoxFilter.Location = new System.Drawing.Point(600, 12);
-            this.pictureBoxFilter.Name = "pictureBoxFilter";
-            this.pictureBoxFilter.Size = new System.Drawing.Size(77, 41);
-            this.pictureBoxFilter.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBoxFilter.TabIndex = 16;
-            this.pictureBoxFilter.TabStop = false;
-            this.toolTipFilter.SetToolTip(this.pictureBoxFilter, "choose filters for captured packets");
-            this.pictureBoxFilter.Click += new System.EventHandler(this.PictureBoxFilter_Click);
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Image = global::SnifferClient.Properties.Resources.CAPCKET_logo_red_cut_removebg_preview;
-            this.pictureBox1.Location = new System.Drawing.Point(683, 6);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(100, 50);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox1.TabIndex = 15;
-            this.pictureBox1.TabStop = false;
-            // 
-            // startPictureBox
-            // 
-            this.startPictureBox.Image = global::SnifferClient.Properties.Resources.play_arrow_button_circle_86280;
-            this.startPictureBox.Location = new System.Drawing.Point(23, 12);
-            this.startPictureBox.Name = "startPictureBox";
-            this.startPictureBox.Size = new System.Drawing.Size(100, 50);
-            this.startPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.startPictureBox.TabIndex = 12;
-            this.startPictureBox.TabStop = false;
-            this.startToolTip.SetToolTip(this.startPictureBox, "start capturing packets");
-            this.startPictureBox.Click += new System.EventHandler(this.StartPictureBox_Click);
+            this.labelStatusTitle.AutoSize = true;
+            this.labelStatusTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(177)));
+            this.labelStatusTitle.Location = new System.Drawing.Point(263, 6);
+            this.labelStatusTitle.Name = "labelStatusTitle";
+            this.labelStatusTitle.Size = new System.Drawing.Size(66, 22);
+            this.labelStatusTitle.TabIndex = 14;
+            this.labelStatusTitle.Text = "Status:";
             // 
             // stopPictureBox
             // 
@@ -205,15 +171,59 @@
             this.stopToolTip.SetToolTip(this.stopPictureBox, "stop capturing packets");
             this.stopPictureBox.Click += new System.EventHandler(this.stopPictureBox_Click);
             // 
+            // startPictureBox
+            // 
+            this.startPictureBox.Image = global::SnifferClient.Properties.Resources.play_arrow_button_circle_86280;
+            this.startPictureBox.Location = new System.Drawing.Point(23, 12);
+            this.startPictureBox.Name = "startPictureBox";
+            this.startPictureBox.Size = new System.Drawing.Size(100, 50);
+            this.startPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.startPictureBox.TabIndex = 12;
+            this.startPictureBox.TabStop = false;
+            this.startToolTip.SetToolTip(this.startPictureBox, "start capturing packets");
+            this.startPictureBox.Click += new System.EventHandler(this.StartPictureBox_Click);
+            // 
+            // pictureBoxFilter
+            // 
+            this.pictureBoxFilter.Enabled = false;
+            this.pictureBoxFilter.Image = global::SnifferClient.Properties.Resources.Filter_gray;
+            this.pictureBoxFilter.Location = new System.Drawing.Point(235, 29);
+            this.pictureBoxFilter.Name = "pictureBoxFilter";
+            this.pictureBoxFilter.Size = new System.Drawing.Size(46, 33);
+            this.pictureBoxFilter.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBoxFilter.TabIndex = 16;
+            this.pictureBoxFilter.TabStop = false;
+            this.toolTipFilter.SetToolTip(this.pictureBoxFilter, "choose filters for captured packets");
+            this.pictureBoxFilter.Click += new System.EventHandler(this.PictureBoxFilter_Click);
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = global::SnifferClient.Properties.Resources.CAPCKET_logo_red_cut_removebg_preview;
+            this.pictureBox1.Location = new System.Drawing.Point(700, 6);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(100, 50);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox1.TabIndex = 15;
+            this.pictureBox1.TabStop = false;
+            // 
+            // labelFilterRequests
+            // 
+            this.labelFilterRequests.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(177)));
+            this.labelFilterRequests.Location = new System.Drawing.Point(332, 52);
+            this.labelFilterRequests.Name = "labelFilterRequests";
+            this.labelFilterRequests.Size = new System.Drawing.Size(592, 22);
+            this.labelFilterRequests.TabIndex = 17;
+            // 
             // RawSockSnifferForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1057, 553);
+            this.ClientSize = new System.Drawing.Size(1063, 553);
+            this.Controls.Add(this.labelFilterRequests);
             this.Controls.Add(this.pictureBoxFilter);
             this.Controls.Add(this.pictureBox1);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.statusLabel);
+            this.Controls.Add(this.labelStatusTitle);
+            this.Controls.Add(this.labelStatus);
             this.Controls.Add(this.startPictureBox);
             this.Controls.Add(this.requestButton);
             this.Controls.Add(this.chooseDateLabel);
@@ -224,10 +234,10 @@
             this.Name = "RawSockSnifferForm";
             this.Text = "CAPCKET";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.RawSockSnifferForm_FormClosed);
+            ((System.ComponentModel.ISupportInitialize)(this.stopPictureBox)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.startPictureBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxFilter)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.startPictureBox)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.stopPictureBox)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -246,12 +256,13 @@
         private System.Windows.Forms.Label chooseDateLabel;
         private System.Windows.Forms.Button requestButton;
         private System.Windows.Forms.PictureBox startPictureBox;
-        private System.Windows.Forms.Label statusLabel;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label labelStatus;
+        private System.Windows.Forms.Label labelStatusTitle;
         private System.Windows.Forms.ToolTip stopToolTip;
         private System.Windows.Forms.ToolTip startToolTip;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.PictureBox pictureBoxFilter;
         private System.Windows.Forms.ToolTip toolTipFilter;
+        private System.Windows.Forms.Label labelFilterRequests;
     }
 }

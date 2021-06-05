@@ -1,34 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace SnifferClient
 {
+    /// <summary>
+    /// form class that let the user choose filters for the packets
+    /// </summary>
     public partial class FilterForm : Form
     {
         /// <summary>
-        /// string that restores the user's answer
+        /// list of strings that restores the user's chosen protocols
         /// </summary>
-        public string text { get; set; }
         public List<string> selectedProtocols { get; set; }
+
+        /// <summary>
+        /// list of strings that restores the user's chosen addresses
+        /// </summary>
         public List<string> selectedAddresses { get; set; }
+        
+        /// <summary>
+        /// construction that creates the filter settings form
+        /// </summary>
         public FilterForm()
         {
             InitializeComponent();
             selectedAddresses = new List<string>();
             checkedListBoxProtocols.Validated += new EventHandler(checkedListBoxProtocols_Validated);
-            //textBoxSrcIp.Validated += new EventHandler(textBoxSrcIp_Validated);
-            //textBoxDstIp.Validated += new EventHandler(textBoxDstIp_Validated);
-            //textBoxSrcPort.Validated += new EventHandler(textBoxSrcPort_Validated);
-            //textBoxDstPort.Validated += new EventHandler(textBoxDstPort_Validated);
-
         }
 
         /// <summary>
@@ -48,50 +47,6 @@ namespace SnifferClient
             }
         }
 
-        ///// <summary>
-        ///// when the text box is validated, inserts the source ip to the list
-        ///// </summary>
-        ///// <param name="sender"></param>
-        ///// <param name="e"></param>
-        //void textBoxSrcIp_Validated(object sender, EventArgs e)
-        //{
-        //    if(checkBoxSrcIp.Checked)
-        //        selectedAddresses[0] = textBoxSrcIp.Text;
-        //}
-
-        ///// <summary>
-        ///// when the text box is validated, inserts the destination ip to the list
-        ///// </summary>
-        ///// <param name="sender"></param>
-        ///// <param name="e"></param>
-        //void textBoxDstIp_Validated(object sender, EventArgs e)
-        //{
-        //    if (checkBoxDstIp.Checked)
-        //        selectedAddresses[1] = textBoxDstIp.Text;
-        //}
-
-        ///// <summary>
-        ///// when the text box is validated, inserts the source port to the list
-        ///// </summary>
-        ///// <param name="sender"></param>
-        ///// <param name="e"></param>
-        //void textBoxSrcPort_Validated(object sender, EventArgs e)
-        //{
-        //    if (checkBoxSrcPort.Checked)
-        //        selectedAddresses[0] = textBoxSrcPort.Text;
-        //}
-
-        ///// <summary>
-        ///// when the text box is validated, inserts the destination port to the list
-        ///// </summary>
-        ///// <param name="sender"></param>
-        ///// <param name="e"></param>
-        //void textBoxDstPort_Validated(object sender, EventArgs e)
-        //{
-        //    if (checkBoxDstPort.Checked)
-        //        selectedAddresses[1] = textBoxDstPort.Text;
-        //}
-
         /// <summary>
         /// when the button is clicked, closes the form
         /// </summary>
@@ -99,34 +54,63 @@ namespace SnifferClient
         /// <param name="e"></param>
         private void buttonFilter_Click(object sender, EventArgs e)
         {
-            selectedAddresses.Add(textBoxSrcIp.Text);
-            selectedAddresses.Add(textBoxDstIp.Text);
-            selectedAddresses.Add(textBoxSrcPort.Text);
-            selectedAddresses.Add(textBoxDstPort.Text);
-            //selectedAddresses[0] = textBoxSrcIp.Text;
-            //selectedAddresses[1] = textBoxDstIp.Text;
-            //selectedAddresses[2] = textBoxSrcPort.Text;
-            //selectedAddresses[3] = textBoxDstPort.Text;
+            if (checkBoxSrcIp.Checked)
+                selectedAddresses.Add(textBoxSrcIp.Text);
+            else
+                selectedAddresses.Add("");
+            if (checkBoxDstIp.Checked)
+                selectedAddresses.Add(textBoxDstIp.Text);
+            else
+                selectedAddresses.Add("");
+            if (checkBoxSrcPort.Checked) 
+                selectedAddresses.Add(textBoxSrcPort.Text);
+            else
+                selectedAddresses.Add("");
+            if (checkBoxDstPort.Checked) 
+                selectedAddresses.Add(textBoxDstPort.Text);
+            else
+                selectedAddresses.Add("");
+
             Debug.WriteLine("list length" + selectedAddresses.Count);
             this.DialogResult = DialogResult.OK;
             this.Hide();
         }
 
+        /// <summary>
+        /// change the read only status of the source ip according to the check box checked status
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void checkBoxSrcIp_CheckedChanged(object sender, EventArgs e)
         {
             textBoxSrcIp.ReadOnly = !checkBoxSrcIp.Checked;
         }
 
+        /// <summary>
+        /// change the read only status of the destination ip according to the check box checked status
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void checkBoxDstIp_CheckedChanged(object sender, EventArgs e)
         {
             textBoxDstIp.ReadOnly = !checkBoxDstIp.Checked;
         }
 
+        /// <summary>
+        /// change the read only status of the source port according to the check box checked status
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void checkBoxSrcPort_CheckedChanged(object sender, EventArgs e)
         {
             textBoxSrcPort.ReadOnly = !checkBoxSrcPort.Checked;
         }
 
+        /// <summary>
+        /// change the read only status of the destination port according to the check box checked status
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void checkBoxDstPort_CheckedChanged(object sender, EventArgs e)
         {
             textBoxDstPort.ReadOnly = !checkBoxDstPort.Checked;
