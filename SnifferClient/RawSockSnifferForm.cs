@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using System.Net.Sockets;
 using SharpPcap;
 using System.Diagnostics;
+using System.Net;
 
 namespace SnifferClient
 {
@@ -240,8 +241,11 @@ namespace SnifferClient
                 foreach (ICaptureDevice dev in devices)
                 {
                     string descr = dev.ToString();
-
-                    if (descr.Contains("192.168.0.186"))
+                    string HostName = Dns.GetHostName();
+                    IPAddress[] ipaddress = Dns.GetHostAddresses(HostName);
+                    string ipToUse = ipaddress[1].ToString();
+                    Debug.WriteLine("using the ip: " + ipToUse);
+                    if (descr.Contains(ipToUse))
                     {
                         s += "Will use this one for test: \n" + descr;
                         device = dev;
