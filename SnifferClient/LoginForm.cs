@@ -191,10 +191,18 @@ namespace SnifferClient
                     else if (requestNumber == PasswordRequest)
                     {
                         string password = CreateInteractionForm("Please enter a new password:", "CAPCKET changing password");
-                        // hash password
-                        string hashpassword = HashString(password);
-                        Debug.WriteLine("hash length: " + hashpassword.Length);
-                        SendAesEncryptedMessage(PasswordResponse + "#" + hashpassword + "#" + password.Length);
+                        if (!IsPasswordValid(password)) //checking password validity 
+                        {
+                            //password isn't valid.
+                            MessageBox.Show("The pasword isn't valid. Please try again.\nIt should be 6-8 charcters and contain both digits and letters.", "CAPCKET changing password");
+                        }
+                        else
+                        {
+                            // hash password
+                            string hashpassword = HashString(password);
+                            Debug.WriteLine("hash length: " + hashpassword.Length);
+                            SendAesEncryptedMessage(PasswordResponse + "#" + hashpassword + "#" + password.Length);
+                        }
                     }
                     else if (requestNumber == PasswordChangeStatusResponse)
                     {
